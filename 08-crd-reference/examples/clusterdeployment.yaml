@@ -1,0 +1,29 @@
+# ClusterDeployment example for Assisted Installer
+# This defines a cluster to be installed via the Assisted Service
+apiVersion: hive.openshift.io/v1
+kind: ClusterDeployment
+metadata:
+  name: my-cluster
+  namespace: my-cluster
+spec:
+  baseDomain: example.com
+  clusterName: my-cluster
+  
+  # Platform selection - agentBareMetal for Assisted Installer
+  platform:
+    agentBareMetal:
+      agentSelector:
+        matchLabels:
+          cluster-name: my-cluster
+  
+  # Reference to AgentClusterInstall for install parameters
+  clusterInstallRef:
+    group: extensions.hive.openshift.io
+    kind: AgentClusterInstall
+    name: my-cluster
+    version: v1beta1
+  
+  # Pull secret for image access
+  pullSecretRef:
+    name: pull-secret
+

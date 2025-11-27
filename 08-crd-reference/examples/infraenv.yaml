@@ -1,0 +1,40 @@
+# InfraEnv example
+# Defines the discovery environment and generates the discovery ISO
+apiVersion: agent-install.openshift.io/v1beta1
+kind: InfraEnv
+metadata:
+  name: my-cluster
+  namespace: my-cluster
+spec:
+  # Link to cluster (optional - omit for late binding)
+  clusterRef:
+    name: my-cluster
+    namespace: my-cluster
+  
+  # Pull secret for downloading images
+  pullSecretRef:
+    name: pull-secret
+  
+  # SSH key for accessing discovered hosts
+  sshAuthorizedKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQ..."
+  
+  # CPU architecture
+  cpuArchitecture: x86_64
+  
+  # Proxy configuration (optional)
+  proxy:
+    httpProxy: "http://proxy.example.com:8080"
+    httpsProxy: "http://proxy.example.com:8080"
+    noProxy: ".example.com,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+  
+  # Additional CA bundle (optional, for disconnected)
+  additionalTrustBundle: |
+    -----BEGIN CERTIFICATE-----
+    MIIDXTCCAkWgAwIBAgIJAMqS...
+    -----END CERTIFICATE-----
+  
+  # Static network configuration selector
+  nmStateConfigLabelSelector:
+    matchLabels:
+      cluster-name: my-cluster
+

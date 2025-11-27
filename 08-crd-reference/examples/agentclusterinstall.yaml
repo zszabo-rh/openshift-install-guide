@@ -1,0 +1,44 @@
+# AgentClusterInstall example
+# Defines the installation parameters for an Assisted Installer cluster
+apiVersion: extensions.hive.openshift.io/v1beta1
+kind: AgentClusterInstall
+metadata:
+  name: my-cluster
+  namespace: my-cluster
+spec:
+  # Reference back to ClusterDeployment
+  clusterDeploymentRef:
+    name: my-cluster
+  
+  # OCP version reference
+  imageSetRef:
+    name: openshift-v4.14.0
+  
+  # Cluster networking
+  networking:
+    clusterNetwork:
+      - cidr: 10.128.0.0/14
+        hostPrefix: 23
+    serviceNetwork:
+      - 172.30.0.0/16
+    machineNetwork:
+      - cidr: 192.168.1.0/24
+    networkType: OVNKubernetes
+  
+  # Virtual IPs (required for multi-node, optional for SNO)
+  apiVIPs:
+    - 192.168.1.100
+  ingressVIPs:
+    - 192.168.1.101
+  
+  # Node requirements
+  provisionRequirements:
+    controlPlaneAgents: 3
+    workerAgents: 2
+  
+  # Platform type
+  platformType: BareMetal
+  
+  # SSH public key for node access
+  sshPublicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQ..."
+

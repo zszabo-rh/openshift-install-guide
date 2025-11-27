@@ -1,0 +1,61 @@
+# BareMetalHost example
+# Defines a bare metal host managed by the Baremetal Operator
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: master-0
+  namespace: my-cluster
+  labels:
+    # Links this BMH to the InfraEnv
+    infraenvs.agent-install.openshift.io: my-cluster
+  annotations:
+    # Assisted agent configuration (BMAC copies these to Agent)
+    bmac.agent-install.openshift.io/role: master
+    bmac.agent-install.openshift.io/hostname: master-0
+    # Optional: installer arguments
+    # bmac.agent-install.openshift.io/installer-args: '["--copy-network"]'
+spec:
+  # Power state
+  online: true
+  
+  # Boot MAC address (used for Agent matching)
+  bootMACAddress: "00:11:22:33:44:55"
+  
+  # BMC configuration
+  bmc:
+    # Redfish Virtual Media example
+    address: redfish-virtualmedia://192.168.1.100/redfish/v1/Systems/1
+    
+    # Alternative formats:
+    # IPMI: ipmi://192.168.1.100
+    # iDRAC: idrac-virtualmedia://192.168.1.100/redfish/v1/Systems/System.Embedded.1
+    # iLO: ilo5-virtualmedia://192.168.1.100/redfish/v1/Systems/1
+    
+    # Reference to BMC credentials secret
+    credentialsName: bmc-credentials
+    
+    # Disable certificate verification (for self-signed certs)
+    disableCertificateVerification: true
+  
+  # Disable BMO inspection (Assisted handles discovery)
+  automatedCleaningMode: disabled
+  
+  # Installation disk hint
+  rootDeviceHints:
+    deviceName: /dev/sda
+    # Alternative hints:
+    # minSizeGigabytes: 100
+    # wwn: "0x5000..."
+    # model: "SAMSUNG..."
+---
+# BMC credentials secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bmc-credentials
+  namespace: my-cluster
+type: Opaque
+data:
+  username: YWRtaW4=       # base64 encoded
+  password: cGFzc3dvcmQ=   # base64 encoded
+
