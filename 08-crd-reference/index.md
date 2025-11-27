@@ -175,12 +175,12 @@ See the [examples/](examples/) directory for complete YAML examples:
 - [ClusterDeployment](examples/clusterdeployment.yaml)
 - [AgentClusterInstall](examples/agentclusterinstall.yaml)
 - [InfraEnv](examples/infraenv.yaml)
-- [Agent](examples/agent.yaml)
 - [NMStateConfig](examples/nmstateconfig.yaml)
 - [BareMetalHost](examples/baremetalhost.yaml)
-- [HostedCluster](examples/hostedcluster.yaml)
-- [NodePool](examples/nodepool.yaml)
-- [ClusterInstance](examples/clusterinstance.yaml)
+
+> **Note:** For HostedCluster, NodePool, and ClusterInstance examples, see inline examples in:
+> - [HCP Overview](../05-hosted-control-planes/hcp-overview.md)
+> - [ZTP Documentation](../06-gitops-provisioning/ztp.md)
 
 ## Related Documentation
 

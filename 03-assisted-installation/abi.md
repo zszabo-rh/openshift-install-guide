@@ -206,15 +206,15 @@ openshift-install agent wait-for install-complete --dir=.
 
 ### Embedded Components
 
-The agent ISO contains:
+The agent ISO contains embedded minimal services for coordination (internally using the same assisted-service codebase):
 
 ```mermaid
 graph TB
     subgraph "Agent ISO Contents"
         RHCOS[RHCOS Live Image]
         AGENT[assisted-installer-agent]
-        SERVICE[assisted-service]
-        DB[SQLite Database]
+        SERVICE[Embedded Coordination Service]
+        STATE[Cluster State Storage]
         IMAGES[Container Images]
         CONFIG[ZTP Manifests]
     end
@@ -222,10 +222,12 @@ graph TB
     RHCOS --> BOOT[Boot System]
     BOOT --> AGENT
     BOOT --> SERVICE
-    SERVICE --> DB
+    SERVICE --> STATE
     AGENT --> SERVICE
     CONFIG --> SERVICE
 ```
+
+> **Implementation Note:** The embedded service is based on assisted-service running in a lightweight mode with local state storage. This is an implementation detail—the user experience is through the generated ISO and `openshift-install agent` commands.
 
 ### Rendezvous Host
 
@@ -233,10 +235,10 @@ One host (specified by `rendezvousIP`) acts as the coordination point:
 
 | Responsibility | Description |
 |----------------|-------------|
-| Run assisted-service | Embedded REST API |
-| Store cluster state | SQLite database |
-| Coordinate installation | Track all hosts |
-| Serve Ignition | Machine Config Server |
+| Run coordination service | Embedded REST API for inter-node communication |
+| Store cluster state | Local state storage |
+| Coordinate installation | Track all hosts and progress |
+| Serve Ignition | Machine Config Server role |
 
 ### Agent Registration
 

@@ -2,6 +2,8 @@
 
 The OpenShift Appliance is a pre-built disk image containing all OpenShift components and container images, enabling fully air-gapped installation without any network connectivity.
 
+> **Maturity Note:** The OpenShift Appliance project has varying support levels across releases. Check the [openshift/appliance repository](https://github.com/openshift/appliance) and [official Red Hat documentation](https://docs.openshift.com/container-platform/latest/installing/installing_with_agent_based_installer/preparing-to-install-with-agent-based-installer.html) for current support status and any preview/tech preview designations for your target OCP version.
+
 ## Overview
 
 ```mermaid

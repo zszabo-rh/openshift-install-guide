@@ -117,8 +117,13 @@ A curated collection of documentation, repositories, and learning resources for 
 |------|-------------|--------------|
 | `oc` | OpenShift CLI | [Download](https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/) |
 | `openshift-install` | Installer CLI | [Download](https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/) |
+| `ocm` | OpenShift Cluster Manager CLI for SaaS interactions | [Download](https://github.com/openshift-online/ocm-cli/releases) |
+| `aicli` | Assisted Installer CLI (REST API wrapper) | `pip install aicli` or [repo](https://github.com/karmab/aicli) |
 | `hypershift` | HyperShift CLI | Built from [hypershift repo](https://github.com/openshift/hypershift) |
 | `hiveutil` | Hive utilities | Built from [hive repo](https://github.com/openshift/hive) |
+| `oc-mirror` | Mirror OCP content for disconnected | [Download](https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/) |
+| `butane` | Ignition config transpiler | [Download](https://github.com/coreos/butane/releases) |
+| `nmstatectl` | NMState configuration tool | Package `nmstate` or container |
 
 ### Development Tools
 

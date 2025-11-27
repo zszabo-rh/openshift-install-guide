@@ -42,7 +42,7 @@ sequenceDiagram
 | Nutanix | ✅ | Requires Prism Central |
 | OpenStack | ✅ | Requires Octavia for LB |
 | vSphere | ✅ | Requires vCenter |
-| Bare Metal | ⚠️ | Limited (uses Assisted internally) |
+| Bare Metal | ✅ | Uses Bare Metal IPI (Metal3/Ironic), separate from Assisted |
 
 ## Key Components
 
@@ -121,6 +121,17 @@ platform:
 pullSecret: '<pull_secret_json>'
 sshKey: '<ssh_public_key>'
 ```
+
+### Release and OS Images
+
+The installer uses two key images (see [Images and Versioning](../00-concepts-glossary.md#images-and-versioning)):
+
+| Image Type | Purpose | Example |
+|------------|---------|---------|
+| **Release Image** | Container with OpenShift version metadata | `quay.io/openshift-release-dev/ocp-release:4.14.10-x86_64` |
+| **OS Image (RHCOS)** | Bootable CoreOS for nodes | `rhcos-4.14.10-x86_64-live.x86_64.iso` |
+
+The release image is embedded in the `openshift-install` binary; the matching OS image is automatically selected during installation.
 
 ### Ignition Configs
 

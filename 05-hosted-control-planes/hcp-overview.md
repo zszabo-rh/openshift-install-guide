@@ -120,13 +120,15 @@ Manages control plane components within each hosted control plane namespace:
 
 ## Supported Platforms
 
+> **Note:** Platform support status changes between releases. The table below is approximate as of OCP 4.14/4.15. Always consult the [official HCP platform support matrix](https://docs.openshift.com/container-platform/latest/hosted_control_planes/index.html) for current status.
+
 | Platform | Status | Worker Type |
 |----------|--------|-------------|
 | AWS | GA | EC2 instances |
-| Azure | Preview | Azure VMs |
+| Azure | Tech Preview | Azure VMs |
 | KubeVirt | GA | VMs on OpenShift Virtualization |
 | Bare Metal (Agent) | GA | Physical/virtual via Assisted |
-| IBM Power | Preview | PowerVS instances |
+| IBM Power | Tech Preview | PowerVS instances |
 
 ## HostedCluster Configuration
 

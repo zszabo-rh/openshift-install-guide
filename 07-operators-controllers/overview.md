@@ -2,6 +2,35 @@
 
 OpenShift installation involves multiple operators working together. This document provides an architectural overview of how they interact.
 
+## Terminology: Operators vs Controllers
+
+Before diving in, let's clarify the relationship between operators and controllers:
+
+| Term | Definition | Example |
+|------|------------|---------|
+| **Operator** | A deployment/pod that runs one or more controllers, often packaged and distributed via OLM (Operator Lifecycle Manager) | assisted-service, hive-operator, hypershift |
+| **Controller** | A specific reconciliation loop that watches CRDs and drives actual state toward desired spec | InfraEnvReconciler, AgentReconciler |
+
+An operator is the **container/deployment**, while controllers are the **logic inside it**:
+
+```mermaid
+graph TB
+    subgraph "assisted-service Operator (Pod)"
+        CTRL1[InfraEnvReconciler]
+        CTRL2[AgentReconciler]
+        CTRL3[ClusterDeploymentsReconciler]
+        CTRL4[BMACReconciler]
+        API[REST API Handler]
+    end
+    
+    IE[InfraEnv CR] --> CTRL1
+    AGENT[Agent CR] --> CTRL2
+    CD[ClusterDeployment CR] --> CTRL3
+    BMH[BareMetalHost CR] --> CTRL4
+```
+
+A single operator typically implements multiple controllers, each responsible for reconciling a specific CRD type. See [Detailed Controller Reference](reference.md) for the complete list.
+
 ## Operator Ecosystem
 
 ```mermaid

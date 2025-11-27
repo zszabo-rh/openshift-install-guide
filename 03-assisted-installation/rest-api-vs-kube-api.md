@@ -2,6 +2,19 @@
 
 The Assisted Installer supports two API paradigms: a REST API and a Kubernetes-native API. This document explains the differences, use cases, and how they map to each other.
 
+## Declarative vs Imperative
+
+Before diving into the specifics, it's important to understand the fundamental difference between these API styles:
+
+| Paradigm | Description | Style |
+|----------|-------------|-------|
+| **Imperative** (REST API) | Tell the system *what to do* step by step | Procedural |
+| **Declarative** (Kubernetes CRDs) | Tell the system *what you want*, let controllers figure out how | GitOps-friendly |
+
+**Imperative** requires you to issue commands in sequence and handle state transitions yourself. **Declarative** lets you define desired state, and controllers continuously reconcile actual state toward it.
+
+See [Key Concepts & Glossary](../00-concepts-glossary.md#declarative-vs-imperative-apis) for detailed comparison.
+
 ## Overview
 
 ```mermaid
@@ -357,16 +370,44 @@ Kubernetes CRDs use conditions to report state:
 | `Installed` | Installation status |
 | `Bound` | Bound to cluster |
 
-## Late Binding
+## Early Binding vs Late Binding
 
-The Kubernetes API supports "late binding" - creating InfraEnv without a cluster:
+Host binding determines **when agents are assigned to clusters** during discovery and installation.
+
+### Early Binding
+
+With **early binding**, the InfraEnv references a specific cluster. All discovered hosts automatically bind to that cluster:
 
 ```yaml
-# InfraEnv without clusterRef
+# InfraEnv WITH clusterRef - early binding
 apiVersion: agent-install.openshift.io/v1beta1
 kind: InfraEnv
 metadata:
-  name: shared-infraenv
+  name: my-cluster-infraenv
+  namespace: my-cluster
+spec:
+  clusterRef:                    # <-- Early binding
+    name: my-cluster
+    namespace: my-cluster
+  pullSecretRef:
+    name: pull-secret
+```
+
+**Characteristics:**
+- Simpler workflow - hosts auto-bind on discovery
+- One InfraEnv per cluster
+- Best when you know which hosts go where upfront
+
+### Late Binding
+
+With **late binding**, the InfraEnv has no cluster reference. Hosts enter a shared pool and are manually assigned later:
+
+```yaml
+# InfraEnv WITHOUT clusterRef - late binding
+apiVersion: agent-install.openshift.io/v1beta1
+kind: InfraEnv
+metadata:
+  name: shared-discovery-pool
   namespace: open-cluster-management
 spec:
   # No clusterRef - hosts can bind later
@@ -375,7 +416,7 @@ spec:
   sshAuthorizedKey: "ssh-rsa ..."
 ```
 
-Agents from this InfraEnv can later bind to any cluster:
+Agents from this pool can later bind to any cluster:
 
 ```yaml
 apiVersion: agent-install.openshift.io/v1beta1
@@ -385,10 +426,28 @@ metadata:
   namespace: open-cluster-management
 spec:
   approved: true
-  clusterDeploymentName:
-    name: target-cluster      # Bind to this cluster
+  clusterDeploymentName:         # <-- Late binding assignment
+    name: target-cluster
     namespace: target-cluster
 ```
+
+**Characteristics:**
+- Shared host pool across clusters
+- Flexible assignment based on capacity, location, hardware
+- Common in large-scale ZTP deployments
+- Requires additional step to bind hosts
+
+### Comparison
+
+| Aspect | Early Binding | Late Binding |
+|--------|---------------|--------------|
+| **clusterRef** | Required | Omitted |
+| **When hosts bind** | At discovery | After discovery |
+| **InfraEnv scope** | One per cluster | Shared pool |
+| **Use case** | Known clusters, known hosts | Dynamic assignment, large fleets |
+| **ZTP pattern** | Per-site InfraEnv | Central pool + AgentClassification |
+
+See [Key Concepts & Glossary](../00-concepts-glossary.md#early-binding-vs-late-binding) for more details.
 
 ## API Parity
 

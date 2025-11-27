@@ -6,57 +6,17 @@ A comprehensive guide for developers navigating OpenShift cluster installation m
 
 | Section | Description |
 |---------|-------------|
+| [**Key Concepts & Glossary**](00-concepts-glossary.md) | Essential terminology: hub/spoke, early/late binding, images, hyperscalers |
 | [Installation Methods Overview](01-installation-methods-overview.md) | Comparison matrix and decision tree for choosing the right installation method |
-| [Traditional Installers](02-traditional-installers/) | IPI, UPI, and the bootstrap process |
-| [Assisted Installation](03-assisted-installation/) | SaaS, on-premise, Agent-Based Installer |
-| [Image-Based Installation](04-image-based-installation/) | IBI and Appliance approaches |
-| [Hosted Control Planes](05-hosted-control-planes/) | HyperShift and CAPI integration |
-| [GitOps Provisioning](06-gitops-provisioning/) | ZTP, SiteConfig, ACM/MCE integration |
-| [Operators & Controllers](07-operators-controllers/) | Reference for all installation-related operators |
-| [CRD Reference](08-crd-reference/) | Complete CRD documentation with examples |
+| [Traditional Installers](02-traditional-installers/ipi.md) | IPI, UPI, and the bootstrap process |
+| [Assisted Installation](03-assisted-installation/overview.md) | SaaS, on-premise, Agent-Based Installer |
+| [Image-Based Installation](04-image-based-installation/ibi.md) | IBI and Appliance approaches |
+| [Hosted Control Planes](05-hosted-control-planes/hcp-overview.md) | HyperShift and CAPI integration |
+| [GitOps Provisioning](06-gitops-provisioning/ztp.md) | ZTP, SiteConfig, ACM/MCE integration |
+| [Operators & Controllers](07-operators-controllers/overview.md) | Reference for all installation-related operators |
+| [CRD Reference](08-crd-reference/index.md) | Complete CRD documentation with examples |
 | [Diagrams](09-diagrams/component-diagrams.md) | Mermaid architecture diagrams |
 | [Resources](10-resources.md) | Links for further study |
-
-## Installation Methods at a Glance
-
-```mermaid
-graph TD
-    subgraph "Traditional"
-        IPI[IPI - Installer Provisioned]
-        UPI[UPI - User Provisioned]
-    end
-    
-    subgraph "Assisted"
-        SAAS[SaaS - console.redhat.com]
-        ONPREM[On-Premise - MCE Operator]
-        ABI[Agent-Based Installer]
-    end
-    
-    subgraph "Image-Based"
-        IBI[Image-Based Install]
-        APPLIANCE[Appliance]
-    end
-    
-    subgraph "Hosted"
-        HCP[Hosted Control Planes]
-    end
-    
-    subgraph "GitOps"
-        ZTP[Zero Touch Provisioning]
-        SITECONFIG[SiteConfig Operator]
-    end
-    
-    USER((Developer)) --> CHOOSE{Choose Method}
-    CHOOSE --> IPI
-    CHOOSE --> UPI
-    CHOOSE --> SAAS
-    CHOOSE --> ONPREM
-    CHOOSE --> ABI
-    CHOOSE --> IBI
-    CHOOSE --> APPLIANCE
-    CHOOSE --> HCP
-    CHOOSE --> ZTP
-```
 
 ## Key Concepts
 
@@ -68,12 +28,12 @@ OpenShift installation involves:
 3. **Installing** the permanent control plane and workers
 4. **Configuring** the cluster with operators and day-2 settings
 
-### The "Alphabet Soup" Problem
+### Glossary: The "Alphabet Soup"
 
-OpenShift has multiple installation paths, each with its own acronyms:
+OpenShift has multiple installation paths, each with its own acronyms. Here are the most common:
 
-| Acronym | Full Name | Primary Use Case |
-|---------|-----------|------------------|
+| Acronym | Full Name | Description |
+|---------|-----------|-------------|
 | **IPI** | Installer-Provisioned Infrastructure | Cloud deployments with full automation |
 | **UPI** | User-Provisioned Infrastructure | Custom/restricted environments |
 | **ABI** | Agent-Based Installer | Disconnected on-premise deployments |
@@ -82,7 +42,29 @@ OpenShift has multiple installation paths, each with its own acronyms:
 | **ZTP** | Zero Touch Provisioning | GitOps-driven edge deployments |
 | **ACM** | Advanced Cluster Management | Multi-cluster management platform |
 | **MCE** | Multicluster Engine | Core cluster lifecycle operator |
-| **CIM** | Central Infrastructure Management | Host inventory management |
+| **SNO** | Single Node OpenShift | All-in-one cluster on a single node |
+
+> 📖 **See [Key Concepts & Glossary](00-concepts-glossary.md)** for detailed explanations of:
+> - Hub and Spoke architecture
+> - Early vs Late binding
+> - Declarative vs Imperative APIs
+> - Hyperscalers
+> - Release images, OS images, and digests
+> - Complete glossary of all acronyms
+
+### Operators vs Controllers
+
+In Kubernetes terminology:
+- **Operator**: A deployment/pod that runs one or more controllers, often packaged via OLM
+- **Controller**: A reconciliation loop that watches CRDs and drives state toward desired spec
+
+For example, **assisted-service** is an operator that contains multiple controllers:
+- `InfraEnvReconciler` - watches InfraEnv CRs
+- `AgentReconciler` - watches Agent CRs
+- `ClusterDeploymentsReconciler` - watches ClusterDeployment CRs
+- And several more...
+
+See [Operators & Controllers Reference](07-operators-controllers/overview.md) for details.
 
 ### Operator Ecosystem
 
@@ -116,8 +98,8 @@ graph LR
 
 1. **New to OpenShift?** Start with [Installation Methods Overview](01-installation-methods-overview.md)
 2. **Know your method?** Jump to the specific section
-3. **Developing operators?** See [Operators & Controllers Reference](07-operators-controllers/)
-4. **Working with CRDs?** Check the [CRD Reference](08-crd-reference/)
+3. **Developing operators?** See [Operators & Controllers Reference](07-operators-controllers/overview.md)
+4. **Working with CRDs?** Check the [CRD Reference](08-crd-reference/index.md)
 
 ## Prerequisites for Understanding This Guide
 

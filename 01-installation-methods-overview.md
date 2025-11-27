@@ -58,7 +58,7 @@ flowchart TD
 **What it is:** The `openshift-install` binary provisions all infrastructure (VMs, networking, storage) automatically on supported cloud platforms.
 
 **Best for:**
-- AWS, Azure, GCP, IBM Cloud deployments
+- [Hyperscaler](00-concepts-glossary.md#hyperscalers) deployments (AWS, Azure, GCP, IBM Cloud)
 - Teams that want minimal infrastructure management
 - Development and testing environments
 
@@ -291,9 +291,11 @@ graph TB
         IPI --> INSTALLER
         UPI --> INSTALLER
         ABI --> ASSISTED_SVC
+        ABI --> INSTALLER
         SAAS[Assisted SaaS] --> ASSISTED_SVC
         ONPREM[Assisted MCE] --> ASSISTED_SVC
         ONPREM --> HIVE
+        ASSISTED_SVC -->|"generates ignition via"| INSTALLER
     end
     
     subgraph "Orchestration Layers"
@@ -308,6 +310,8 @@ graph TB
         HCP --> HYPERSHIFT[HyperShift]
     end
 ```
+
+> **Note:** The assisted-service internally uses the `openshift-install` binary to generate Ignition configs. This is an implementation detail—users interact only with the Assisted APIs or CRDs.
 
 ## Choosing Based on Requirements
 
@@ -339,14 +343,14 @@ graph TB
 
 | Infrastructure | Recommended Methods |
 |----------------|---------------------|
-| Major clouds (AWS, Azure, GCP) | IPI, HCP |
+| [Hyperscalers](00-concepts-glossary.md#hyperscalers) (AWS, Azure, GCP) | IPI, HCP |
 | VMware vSphere | IPI, Assisted, ABI |
 | Bare metal | Assisted, ABI, ZTP |
 | Edge/Telco | IBI, ZTP |
 
 ## Next Steps
 
-- [Traditional Installers (IPI/UPI)](02-traditional-installers/) - Deep dive into bootstrap process
-- [Assisted Installation](03-assisted-installation/) - Detailed component architecture
-- [Operators & Controllers Reference](07-operators-controllers/) - Understanding the operator ecosystem
+- [Traditional Installers (IPI/UPI)](02-traditional-installers/ipi.md) - Deep dive into bootstrap process
+- [Assisted Installation](03-assisted-installation/overview.md) - Detailed component architecture
+- [Operators & Controllers Reference](07-operators-controllers/overview.md) - Understanding the operator ecosystem
 

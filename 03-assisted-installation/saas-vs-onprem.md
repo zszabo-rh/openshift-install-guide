@@ -1,6 +1,6 @@
 # SaaS vs On-Premise Assisted Installation
 
-The Assisted Installer can run in two modes: as a hosted SaaS service or deployed on your own infrastructure. This document compares the two approaches.
+The Assisted Installer can run in two modes: as a hosted SaaS service or deployed on your own infrastructure (on a [hub cluster](../00-concepts-glossary.md#hub-and-spoke-architecture)). This document compares the two approaches.
 
 ## Architecture Comparison
 
@@ -74,13 +74,15 @@ graph TB
 |---------|------|------------------|
 | **Hub cluster required** | No | Yes (OpenShift) |
 | **Internet connectivity** | Required | Optional (can be disconnected) |
-| **API type** | REST API only | REST API + Kubernetes CRDs |
+| **API type** | REST API only | REST API available, but CRDs are the recommended integration surface |
 | **User interface** | console.redhat.com | OpenShift Console + CLI |
 | **Multi-cluster management** | Limited | Full (via ACM) |
-| **Mirror registry support** | No | Yes |
+| **Mirror registry support** | No* | Yes |
 | **Day 2 cluster management** | Limited | Full (via Hive) |
 | **Red Hat subscription** | Required for hosts | Required for hub + hosts |
 | **Maintenance** | Red Hat managed | Customer managed |
+
+> \* **Mirror registry note:** SaaS requires Internet connectivity for the service itself. For target clusters that can reach the SaaS but have limited registry access, image mirroring may still be configured per standard disconnected guidance.
 
 ## When to Use Each
 
@@ -115,13 +117,15 @@ graph TB
 
 ```yaml
 # 1. Install MCE Operator (via OperatorHub or CLI)
+# Note: Update channel to match your ACM/MCE version (e.g., stable-2.5, stable-2.6)
+# See: https://access.redhat.com/articles/7055998 for version compatibility
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
   name: multicluster-engine
   namespace: multicluster-engine
 spec:
-  channel: stable-2.4
+  channel: stable-2.x  # Replace with current supported version
   name: multicluster-engine
   source: redhat-operators
   sourceNamespace: openshift-marketplace
@@ -161,11 +165,13 @@ spec:
     resources:
       requests:
         storage: 50Gi
+  # OS images - update versions to match your target OCP release
+  # See: https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/
   osImages:
     - cpuArchitecture: x86_64
-      openshiftVersion: "4.14"
+      openshiftVersion: "4.x"  # Replace with target version
       url: "https://mirror.example.com/rhcos-live.x86_64.iso"
-      version: "414.92.202310210434-0"
+      version: "4xx.xx.xxxxxxxxxx-0"  # Match RHCOS version
 ```
 
 ### Verifying Deployment

@@ -203,7 +203,7 @@ During bootstrap, these components transition from bootstrap to production:
 | kube-apiserver | Static pod on bootstrap | Static pod on masters (via MCO) |
 | kube-controller-manager | Not running | Static pod on masters |
 | kube-scheduler | Not running | Static pod on masters |
-| Machine Config Server | Bootstrap binary | Deployment in cluster |
+| Machine Config Server | Bootstrap binary | DaemonSet on masters (via MCO) |
 
 ## Cluster Operators During Bootstrap
 
