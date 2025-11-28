@@ -6,13 +6,13 @@ Hosted Control Planes (HCP) is a deployment model where OpenShift control planes
 
 ```mermaid
 graph TB
-    subgraph "Management Cluster"
-        subgraph "HyperShift Operator"
+    subgraph mgmt["Management Cluster"]
+        subgraph hypershift["HyperShift Operator"]
             HO[HyperShift Operator]
             CPO[Control Plane Operator]
         end
         
-        subgraph "Hosted Control Plane Namespace"
+        subgraph hcpns["Hosted Control Plane Namespace"]
             ETCD[etcd pods]
             KAPI[kube-apiserver pods]
             KCM[controller-manager pods]
@@ -24,7 +24,7 @@ graph TB
         NP[NodePool CR]
     end
     
-    subgraph "Worker Infrastructure"
+    subgraph workers["Worker Infrastructure"]
         W1[Worker Node 1]
         W2[Worker Node 2]
         W3[Worker Node 3]
@@ -45,6 +45,26 @@ graph TB
     W1 -->|API| KAPI
     W2 -->|API| KAPI
     W3 -->|API| KAPI
+    
+    style HO fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CPO fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ETCD fill:#7d8597,stroke:#5c6378,color:#fff
+    style KAPI fill:#6d597a,stroke:#4a3f50,color:#fff
+    style KCM fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SCHED fill:#6d597a,stroke:#4a3f50,color:#fff
+    style IGN fill:#6d597a,stroke:#4a3f50,color:#fff
+    style HC fill:#355070,stroke:#1d3557,color:#fff
+    style NP fill:#355070,stroke:#1d3557,color:#fff
+    style W1 fill:#52796f,stroke:#354f52,color:#fff
+    style W2 fill:#52796f,stroke:#354f52,color:#fff
+    style W3 fill:#52796f,stroke:#354f52,color:#fff
+    
+    style mgmt fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
+    style hypershift fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style hcpns fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style workers fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Key Benefits
@@ -92,7 +112,7 @@ The main operator managing the HCP lifecycle:
 
 ```mermaid
 graph LR
-    subgraph "HyperShift Operator"
+    subgraph hypershift["HyperShift Operator"]
         HC_CTRL[HostedCluster<br/>Controller]
         NP_CTRL[NodePool<br/>Controller]
         INFRA_CTRL[Infrastructure<br/>Controller]
@@ -101,6 +121,17 @@ graph LR
     HC_CTRL --> HC[HostedCluster]
     NP_CTRL --> NP[NodePool]
     INFRA_CTRL --> CLOUD[Cloud Resources]
+    
+    style HC_CTRL fill:#6d597a,stroke:#4a3f50,color:#fff
+    style NP_CTRL fill:#6d597a,stroke:#4a3f50,color:#fff
+    style INFRA_CTRL fill:#6d597a,stroke:#4a3f50,color:#fff
+    style HC fill:#355070,stroke:#1d3557,color:#fff
+    style NP fill:#355070,stroke:#1d3557,color:#fff
+    style CLOUD fill:#52796f,stroke:#354f52,color:#fff
+    
+    style hypershift fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ### Control Plane Operator (CPO)
@@ -237,13 +268,19 @@ spec:
 ## Deployment Process
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant User
-    participant HO as HyperShift Operator
-    participant CPO as Control Plane Operator
-    participant IGN as Ignition Server
-    participant CAPI as Cluster API
-    participant Workers
+    box rgb(190,184,168) User & Operators
+        participant User
+        participant HO as HyperShift Operator
+        participant CPO as Control Plane Operator
+        participant IGN as Ignition Server
+    end
+    
+    box rgb(180,175,160) Infrastructure
+        participant CAPI as Cluster API
+        participant Workers
+    end
     
     User->>HO: Create HostedCluster
     HO->>HO: Create control plane namespace
@@ -283,8 +320,8 @@ cluster-policy-controller-4o5p6-xxxxx    1/1     Running
 
 ```mermaid
 graph TB
-    subgraph "Management Cluster"
-        subgraph "HCP Namespace"
+    subgraph mgmt["Management Cluster"]
+        subgraph hcpns["HCP Namespace"]
             KAPI[kube-apiserver<br/>:6443]
             KAS[kas-service<br/>LoadBalancer]
             IGN[ignition-server]
@@ -293,12 +330,12 @@ graph TB
         LB[Load Balancer<br/>or Route]
     end
     
-    subgraph "Workers"
+    subgraph workers["Workers"]
         KUBELET[kubelet]
         KPROXY[kube-proxy]
     end
     
-    subgraph "End Users"
+    subgraph users["End Users"]
         KUBECTL[kubectl]
         APPS[Applications]
     end
@@ -307,6 +344,22 @@ graph TB
     LB --> KAPI
     KUBELET -->|API| LB
     KUBECTL -->|API| LB
+    
+    style KAPI fill:#6d597a,stroke:#4a3f50,color:#fff
+    style KAS fill:#6d597a,stroke:#4a3f50,color:#fff
+    style IGN fill:#6d597a,stroke:#4a3f50,color:#fff
+    style LB fill:#b56576,stroke:#8d4e5a,color:#fff
+    style KUBELET fill:#52796f,stroke:#354f52,color:#fff
+    style KPROXY fill:#52796f,stroke:#354f52,color:#fff
+    style KUBECTL fill:#e56b6f,stroke:#b85450,color:#fff
+    style APPS fill:#355070,stroke:#1d3557,color:#fff
+    
+    style mgmt fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
+    style hcpns fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style workers fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    style users fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Accessing Hosted Clusters

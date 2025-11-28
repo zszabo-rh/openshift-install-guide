@@ -8,7 +8,7 @@ The Assisted Installer can run in two modes: as a hosted SaaS service or deploye
 
 ```mermaid
 graph TB
-    subgraph "Red Hat Managed"
+    subgraph redhat["Red Hat Managed"]
         CONSOLE[console.redhat.com]
         API[api.openshift.com]
         SERVICE[Assisted Service]
@@ -17,7 +17,7 @@ graph TB
         S3[(Object Storage)]
     end
     
-    subgraph "Customer Datacenter"
+    subgraph customer["Customer Datacenter"]
         FIREWALL[Firewall]
         HOSTS[Target Hosts]
         AGENTS[Discovery Agents]
@@ -34,13 +34,29 @@ graph TB
     AGENTS -->|HTTPS 443| FIREWALL
     FIREWALL -->|Outbound| API
     IMAGE -->|ISO Download| AGENTS
+    
+    style CONSOLE fill:#b56576,stroke:#8d4e5a,color:#fff
+    style API fill:#b56576,stroke:#8d4e5a,color:#fff
+    style SERVICE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style IMAGE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style DB fill:#7d8597,stroke:#5c6378,color:#fff
+    style S3 fill:#7d8597,stroke:#5c6378,color:#fff
+    style FIREWALL fill:#adb5bd,stroke:#6c757d,color:#000
+    style HOSTS fill:#52796f,stroke:#354f52,color:#fff
+    style AGENTS fill:#52796f,stroke:#354f52,color:#fff
+    style USER fill:#e56b6f,stroke:#b85450,color:#fff
+    
+    style redhat fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style customer fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ### On-Premise Mode (MCE Operator)
 
 ```mermaid
 graph TB
-    subgraph "Hub Cluster (OpenShift)"
+    subgraph hub["Hub Cluster (OpenShift)"]
         MCE[MCE Operator]
         ASC[AgentServiceConfig]
         HIVE[Hive]
@@ -58,7 +74,7 @@ graph TB
         SERVICE --> HIVE
     end
     
-    subgraph "Spoke Cluster (Installing)"
+    subgraph spoke["Spoke Cluster (Installing)"]
         HOSTS[Target Hosts]
         AGENTS[Discovery Agents]
     end
@@ -66,6 +82,22 @@ graph TB
     USER((User)) --> |oc / kubectl| MCE
     AGENTS --> SERVICE
     IMAGE --> AGENTS
+    
+    style MCE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ASC fill:#355070,stroke:#1d3557,color:#fff
+    style HIVE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SERVICE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style IMAGE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style DB fill:#7d8597,stroke:#5c6378,color:#fff
+    style PV fill:#7d8597,stroke:#5c6378,color:#fff
+    style HOSTS fill:#52796f,stroke:#354f52,color:#fff
+    style AGENTS fill:#52796f,stroke:#354f52,color:#fff
+    style USER fill:#e56b6f,stroke:#b85450,color:#fff
+    
+    style hub fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style spoke fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Feature Comparison
@@ -278,12 +310,12 @@ On-premise mode supports fully disconnected environments:
 
 ```mermaid
 graph TB
-    subgraph "Connected Network"
+    subgraph connected["Connected Network"]
         INTERNET[Internet]
         MIRROR[Mirror Registry]
     end
     
-    subgraph "Disconnected Network"
+    subgraph disconnected["Disconnected Network"]
         HUB[Hub Cluster]
         SERVICE[Assisted Service]
         SPOKE[Spoke Cluster]
@@ -293,6 +325,17 @@ graph TB
     MIRROR -->|Images| HUB
     HUB --> SERVICE
     SERVICE --> SPOKE
+    
+    style INTERNET fill:#b56576,stroke:#8d4e5a,color:#fff
+    style MIRROR fill:#7d8597,stroke:#5c6378,color:#fff
+    style HUB fill:#52796f,stroke:#354f52,color:#fff
+    style SERVICE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SPOKE fill:#52796f,stroke:#354f52,color:#fff
+    
+    style connected fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style disconnected fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ### Required Configuration
@@ -346,13 +389,13 @@ On-premise mode integrates with Hive for cluster lifecycle:
 
 ```mermaid
 graph LR
-    subgraph "Hive"
+    subgraph hive["Hive"]
         CD[ClusterDeployment]
         CP[ClusterPool]
         CC[ClusterClaim]
     end
     
-    subgraph "Assisted"
+    subgraph assisted["Assisted"]
         ACI[AgentClusterInstall]
         IE[InfraEnv]
         A[Agent]
@@ -364,6 +407,18 @@ graph LR
     
     CP -->|Creates| CD
     CC -->|Claims| CD
+    
+    style CD fill:#355070,stroke:#1d3557,color:#fff
+    style CP fill:#355070,stroke:#1d3557,color:#fff
+    style CC fill:#355070,stroke:#1d3557,color:#fff
+    style ACI fill:#355070,stroke:#1d3557,color:#fff
+    style IE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style A fill:#6d597a,stroke:#4a3f50,color:#fff
+    
+    style hive fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style assisted fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ### Benefits of Hive Integration

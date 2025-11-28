@@ -72,7 +72,7 @@ Installation involves multiple cooperating operators:
 
 ```mermaid
 graph LR
-    subgraph "Hub Cluster"
+    subgraph hub["Hub Cluster"]
         MCE[MCE Operator]
         HIVE[Hive]
         ASSISTED[Assisted Service]
@@ -81,7 +81,7 @@ graph LR
         SITECONFIG[SiteConfig Operator]
     end
     
-    subgraph "Spoke Cluster"
+    subgraph spoke["Spoke Cluster"]
         MACHINE_API[Machine API]
         CVO[Cluster Version Operator]
     end
@@ -92,6 +92,20 @@ graph LR
     MCE --> HYPERSHIFT
     HIVE --> ASSISTED
     ASSISTED --> BMO
+    
+    style MCE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style HIVE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ASSISTED fill:#6d597a,stroke:#4a3f50,color:#fff
+    style BMO fill:#6d597a,stroke:#4a3f50,color:#fff
+    style HYPERSHIFT fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SITECONFIG fill:#6d597a,stroke:#4a3f50,color:#fff
+    style MACHINE_API fill:#52796f,stroke:#354f52,color:#fff
+    style CVO fill:#52796f,stroke:#354f52,color:#fff
+    
+    style hub fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style spoke fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:3px
 ```
 
 ## Getting Started

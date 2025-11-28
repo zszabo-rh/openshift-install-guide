@@ -63,7 +63,7 @@ CRDs for post-install machine management:
 
 ```mermaid
 graph TB
-    subgraph "Cluster Definition"
+    subgraph clusterdef["Cluster Definition"]
         CI[ClusterInstance]
         CD[ClusterDeployment]
         ACI[AgentClusterInstall]
@@ -71,20 +71,20 @@ graph TB
         HC[HostedCluster]
     end
     
-    subgraph "Host Management"
+    subgraph hostmgmt["Host Management"]
         IE[InfraEnv]
         AGENT[Agent]
         BMH[BareMetalHost]
         NMS[NMStateConfig]
     end
     
-    subgraph "Supporting"
+    subgraph supporting["Supporting"]
         CIS[ClusterImageSet]
         SECRET[Pull Secret]
         CP[ClusterPool]
     end
     
-    subgraph "HCP Workers"
+    subgraph hcpworkers["HCP Workers"]
         NP[NodePool]
         MD[MachineDeployment]
     end
@@ -109,6 +109,28 @@ graph TB
     
     HC --> NP
     NP --> MD
+    
+    style CI fill:#b56576,stroke:#8d4e5a,color:#fff
+    style CD fill:#355070,stroke:#1d3557,color:#fff
+    style ACI fill:#355070,stroke:#1d3557,color:#fff
+    style ICI fill:#355070,stroke:#1d3557,color:#fff
+    style HC fill:#355070,stroke:#1d3557,color:#fff
+    style IE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style AGENT fill:#6d597a,stroke:#4a3f50,color:#fff
+    style BMH fill:#6d597a,stroke:#4a3f50,color:#fff
+    style NMS fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CIS fill:#7d8597,stroke:#5c6378,color:#fff
+    style SECRET fill:#7d8597,stroke:#5c6378,color:#fff
+    style CP fill:#7d8597,stroke:#5c6378,color:#fff
+    style NP fill:#355070,stroke:#1d3557,color:#fff
+    style MD fill:#355070,stroke:#1d3557,color:#fff
+    
+    style clusterdef fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style hostmgmt fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style supporting fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    style hcpworkers fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## API Groups

@@ -15,7 +15,7 @@ An operator is the **container/deployment**, while controllers are the **logic i
 
 ```mermaid
 graph TB
-    subgraph "assisted-service Operator (Pod)"
+    subgraph operator["assisted-service Operator (Pod)"]
         CTRL1[InfraEnvReconciler]
         CTRL2[AgentReconciler]
         CTRL3[ClusterDeploymentsReconciler]
@@ -27,6 +27,20 @@ graph TB
     AGENT[Agent CR] --> CTRL2
     CD[ClusterDeployment CR] --> CTRL3
     BMH[BareMetalHost CR] --> CTRL4
+    
+    style CTRL1 fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CTRL2 fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CTRL3 fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CTRL4 fill:#6d597a,stroke:#4a3f50,color:#fff
+    style API fill:#6d597a,stroke:#4a3f50,color:#fff
+    style IE fill:#355070,stroke:#1d3557,color:#fff
+    style AGENT fill:#355070,stroke:#1d3557,color:#fff
+    style CD fill:#355070,stroke:#1d3557,color:#fff
+    style BMH fill:#355070,stroke:#1d3557,color:#fff
+    
+    style operator fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 A single operator typically implements multiple controllers, each responsible for reconciling a specific CRD type. See [Detailed Controller Reference](reference.md) for the complete list.
@@ -35,23 +49,23 @@ A single operator typically implements multiple controllers, each responsible fo
 
 ```mermaid
 graph TB
-    subgraph "Cluster Lifecycle Layer"
+    subgraph lifecycle["Cluster Lifecycle Layer"]
         MCE[MCE Operator]
         HIVE[Hive Operator]
     end
     
-    subgraph "Installation Layer"
+    subgraph installation["Installation Layer"]
         ASSISTED[Assisted Service]
         IBI_OP[IBI Operator]
         HYPERSHIFT[HyperShift Operator]
     end
     
-    subgraph "Infrastructure Layer"
+    subgraph infra["Infrastructure Layer"]
         BMO[Baremetal Operator]
         CAPI[Cluster API]
     end
     
-    subgraph "Configuration Layer"
+    subgraph config["Configuration Layer"]
         SITECONFIG[SiteConfig Operator]
         MCO[Machine Config Operator]
     end
@@ -70,6 +84,23 @@ graph TB
     SITECONFIG --> HIVE
     SITECONFIG --> ASSISTED
     SITECONFIG --> IBI_OP
+    
+    style MCE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style HIVE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ASSISTED fill:#6d597a,stroke:#4a3f50,color:#fff
+    style IBI_OP fill:#6d597a,stroke:#4a3f50,color:#fff
+    style HYPERSHIFT fill:#6d597a,stroke:#4a3f50,color:#fff
+    style BMO fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CAPI fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SITECONFIG fill:#6d597a,stroke:#4a3f50,color:#fff
+    style MCO fill:#6d597a,stroke:#4a3f50,color:#fff
+    
+    style lifecycle fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style installation fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style infra fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    style config fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Operators by Function
@@ -108,10 +139,16 @@ graph TB
 ### Reconciliation Flow
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant API as Kubernetes API
-    participant Ctrl as Controller
-    participant State as External State
+    box rgb(190,184,168) Kubernetes
+        participant API as Kubernetes API
+        participant Ctrl as Controller
+    end
+    
+    box rgb(180,175,160) External
+        participant State as External State
+    end
     
     API->>Ctrl: Watch event (create/update/delete)
     Ctrl->>Ctrl: Read current state
@@ -130,12 +167,12 @@ Controllers watch primary resources and related resources:
 
 ```mermaid
 graph LR
-    subgraph "Primary Watch (For)"
+    subgraph primary["Primary Watch (For)"]
         A1[Controller A]
         CRD_A[CRD A]
     end
     
-    subgraph "Secondary Watches"
+    subgraph secondary["Secondary Watches"]
         CRD_B[CRD B]
         CRD_C[CRD C]
         SECRET[Secret]
@@ -145,6 +182,18 @@ graph LR
     CRD_B -.->|Watches| A1
     CRD_C -.->|Watches| A1
     SECRET -.->|Watches| A1
+    
+    style A1 fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CRD_A fill:#355070,stroke:#1d3557,color:#fff
+    style CRD_B fill:#355070,stroke:#1d3557,color:#fff
+    style CRD_C fill:#355070,stroke:#1d3557,color:#fff
+    style SECRET fill:#7d8597,stroke:#5c6378,color:#fff
+    
+    style primary fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style secondary fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle 0 stroke:#2d3748,stroke-width:2px
+    linkStyle 1,2,3 stroke:#2d3748,stroke-width:2px,stroke-dasharray:5
 ```
 
 ## Cross-Operator Communication
@@ -159,10 +208,13 @@ Operators communicate through:
 ### Example: Assisted ↔ BMAC Flow
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant BMO as Baremetal Operator
-    participant BMAC as BMAC Controller
-    participant Assisted as Assisted Service
+    box rgb(190,184,168) Operators
+        participant BMO as Baremetal Operator
+        participant BMAC as BMAC Controller
+        participant Assisted as Assisted Service
+    end
     
     Note over BMO: BareMetalHost created
     BMO->>BMO: Provision host
@@ -182,15 +234,30 @@ sequenceDiagram
 
 ```mermaid
 graph TD
-    OLM[OLM] --> MCE[MCE Operator]
-    MCE --> HIVE[Hive]
-    MCE --> ASSISTED[Assisted Service]
-    MCE --> BMO[Baremetal Operator]
-    MCE --> HYPERSHIFT[HyperShift]
-    MCE --> SITECONFIG[SiteConfig]
+    subgraph background[" "]
+        OLM[OLM] --> MCE[MCE Operator]
+        MCE --> HIVE[Hive]
+        MCE --> ASSISTED[Assisted Service]
+        MCE --> BMO[Baremetal Operator]
+        MCE --> HYPERSHIFT[HyperShift]
+        MCE --> SITECONFIG[SiteConfig]
+        
+        ASSISTED --> BMAC[BMAC Controller]
+        BMO --> BMAC
+    end
     
-    ASSISTED --> BMAC[BMAC Controller]
-    BMO --> BMAC
+    style OLM fill:#b56576,stroke:#8d4e5a,color:#fff
+    style MCE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style HIVE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ASSISTED fill:#6d597a,stroke:#4a3f50,color:#fff
+    style BMO fill:#6d597a,stroke:#4a3f50,color:#fff
+    style HYPERSHIFT fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SITECONFIG fill:#6d597a,stroke:#4a3f50,color:#fff
+    style BMAC fill:#6d597a,stroke:#4a3f50,color:#fff
+    
+    style background fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ### Namespace Layout
@@ -218,13 +285,13 @@ graph TD
 
 ```mermaid
 graph TB
-    subgraph "Error Sources"
+    subgraph sources["Error Sources"]
         VALIDATION[Validation Error]
         INFRA[Infrastructure Error]
         TIMEOUT[Timeout]
     end
     
-    subgraph "Reporting"
+    subgraph reporting["Reporting"]
         CONDITION[Status Condition]
         EVENT[Kubernetes Event]
         LOG[Operator Logs]
@@ -236,6 +303,18 @@ graph TB
     INFRA --> LOG
     TIMEOUT --> CONDITION
     TIMEOUT --> LOG
+    
+    style VALIDATION fill:#c9184a,stroke:#a4133c,color:#fff
+    style INFRA fill:#c9184a,stroke:#a4133c,color:#fff
+    style TIMEOUT fill:#e9c46a,stroke:#c9a227,color:#000
+    style CONDITION fill:#457b9d,stroke:#1d3557,color:#fff
+    style EVENT fill:#457b9d,stroke:#1d3557,color:#fff
+    style LOG fill:#457b9d,stroke:#1d3557,color:#fff
+    
+    style sources fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style reporting fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Monitoring Operators

@@ -6,19 +6,19 @@ The Assisted Installer is an installation method that simplifies OpenShift deplo
 
 ```mermaid
 graph TB
-    subgraph "Assisted Installer Components"
+    subgraph components["Assisted Installer Components"]
         SERVICE[assisted-service<br/>API & Business Logic]
         IMAGE_SVC[assisted-image-service<br/>ISO Generation]
         DB[(PostgreSQL)]
         S3[(Object Storage)]
     end
     
-    subgraph "On Target Hosts"
+    subgraph hosts["On Target Hosts"]
         AGENT[assisted-installer-agent<br/>Discovery & Installation]
         CONTROLLER[assisted-controller<br/>Post-boot coordination]
     end
     
-    subgraph "User Interfaces"
+    subgraph ui["User Interfaces"]
         UI[Web Console]
         CLI[CLI / API]
         KUBE[Kubernetes CRDs]
@@ -35,6 +35,22 @@ graph TB
     IMAGE_SVC -->|ISO| AGENT
     AGENT -->|Hardware Info| SERVICE
     AGENT -->|Installs| CONTROLLER
+    
+    style SERVICE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style IMAGE_SVC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style DB fill:#7d8597,stroke:#5c6378,color:#fff
+    style S3 fill:#7d8597,stroke:#5c6378,color:#fff
+    style AGENT fill:#52796f,stroke:#354f52,color:#fff
+    style CONTROLLER fill:#52796f,stroke:#354f52,color:#fff
+    style UI fill:#355070,stroke:#1d3557,color:#fff
+    style CLI fill:#355070,stroke:#1d3557,color:#fff
+    style KUBE fill:#355070,stroke:#1d3557,color:#fff
+    
+    style components fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style hosts fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    style ui fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## How It Works
@@ -42,12 +58,18 @@ graph TB
 ### 1. Discovery Phase
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant User
-    participant Service as Assisted Service
-    participant ISO as Image Service
-    participant Host as Target Host
-    participant Agent
+    box rgb(190,184,168) Users & Services
+        participant User
+        participant Service as Assisted Service
+        participant ISO as Image Service
+    end
+    
+    box rgb(180,175,160) Target Infrastructure
+        participant Host as Target Host
+        participant Agent
+    end
     
     User->>Service: Create Cluster & InfraEnv
     Service->>ISO: Request Discovery ISO
@@ -77,11 +99,17 @@ The service validates hosts against requirements:
 ### 3. Installation Phase
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant User
-    participant Service as Assisted Service
-    participant Agent
-    participant Host
+    box rgb(190,184,168) User & Service
+        participant User
+        participant Service as Assisted Service
+    end
+    
+    box rgb(180,175,160) Target Host
+        participant Agent
+        participant Host
+    end
     
     User->>Service: Trigger installation
     Service->>Service: Generate Ignition configs
@@ -154,13 +182,13 @@ A Kubernetes Job that runs post-installation:
 
 ```mermaid
 graph LR
-    subgraph "Red Hat Cloud"
+    subgraph cloud["Red Hat Cloud"]
         CONSOLE[console.redhat.com]
         SERVICE[Assisted Service]
         DB[(Database)]
     end
     
-    subgraph "Customer Site"
+    subgraph customer["Customer Site"]
         HOSTS[Target Hosts]
         AGENT[Agents]
     end
@@ -169,6 +197,17 @@ graph LR
     SERVICE --> DB
     AGENT -->|HTTPS| SERVICE
     HOSTS --> AGENT
+    
+    style CONSOLE fill:#b56576,stroke:#8d4e5a,color:#fff
+    style SERVICE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style DB fill:#7d8597,stroke:#5c6378,color:#fff
+    style HOSTS fill:#52796f,stroke:#354f52,color:#fff
+    style AGENT fill:#52796f,stroke:#354f52,color:#fff
+    
+    style cloud fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style customer fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 **Characteristics:**
@@ -181,14 +220,14 @@ graph LR
 
 ```mermaid
 graph LR
-    subgraph "Hub Cluster"
+    subgraph hub["Hub Cluster"]
         MCE[MCE Operator]
         HIVE[Hive]
         ASSISTED[Assisted Service]
         BMO[Baremetal Operator]
     end
     
-    subgraph "Target Cluster"
+    subgraph target["Target Cluster"]
         HOSTS[Target Hosts]
         AGENT[Agents]
     end
@@ -198,6 +237,18 @@ graph LR
     HIVE --> ASSISTED
     ASSISTED --> BMO
     AGENT --> ASSISTED
+    
+    style MCE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style HIVE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ASSISTED fill:#6d597a,stroke:#4a3f50,color:#fff
+    style BMO fill:#6d597a,stroke:#4a3f50,color:#fff
+    style HOSTS fill:#52796f,stroke:#354f52,color:#fff
+    style AGENT fill:#52796f,stroke:#354f52,color:#fff
+    
+    style hub fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style target fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 **Characteristics:**
@@ -213,50 +264,92 @@ graph LR
 ### Host States
 
 ```mermaid
-stateDiagram-v2
-    [*] --> Discovering: Host boots
-    Discovering --> PendingForInput: Missing config
-    Discovering --> Known: Validations pass
-    Discovering --> Insufficient: Validations fail
+flowchart LR
+    subgraph background[" "]
+        direction LR
+        
+        START(( )) -->|Host boots| Discovering
+        
+        Discovering -->|Missing config| PendingForInput
+        Discovering -->|Validations pass| Known
+        Discovering -->|Validations fail| Insufficient
+        
+        PendingForInput -->|Config provided| Known
+        Insufficient -->|Issues fixed| Known
+        Known -->|New issues| Insufficient
+        
+        Known -->|Heartbeat timeout| Disconnected
+        Disconnected -->|Reconnects| Known
+        
+        Known -->|Install triggered| PreparingFor[PreparingFor<br/>Installation]
+        PreparingFor -->|Disk ready| Installing
+        Installing -->|Writing| InProgress[Installing<br/>InProgress]
+        InProgress -->|Boot order issue| PendingAction[Pending<br/>UserAction]
+        InProgress -->|Success| Installed
+        InProgress -->|Failure| Error
+        
+        PendingAction -->|Fixed| InProgress
+        
+        Known -->|User disabled| Disabled
+        Disabled -->|Re-enabled| Known
+    end
     
-    PendingForInput --> Known: Config provided
-    Insufficient --> Known: Issues fixed
-    Known --> Insufficient: New issues
+    style START fill:#2d3748,stroke:#2d3748
+    style Discovering fill:#adb5bd,stroke:#6c757d,color:#000
+    style PendingForInput fill:#adb5bd,stroke:#6c757d,color:#000
+    style Known fill:#adb5bd,stroke:#6c757d,color:#000
+    style Insufficient fill:#adb5bd,stroke:#6c757d,color:#000
+    style Disconnected fill:#e9c46a,stroke:#c9a227,color:#000
+    style PreparingFor fill:#457b9d,stroke:#1d3557,color:#fff
+    style Installing fill:#457b9d,stroke:#1d3557,color:#fff
+    style InProgress fill:#457b9d,stroke:#1d3557,color:#fff
+    style PendingAction fill:#e9c46a,stroke:#c9a227,color:#000
+    style Installed fill:#52796f,stroke:#354f52,color:#fff
+    style Error fill:#c9184a,stroke:#a4133c,color:#fff
+    style Disabled fill:#adb5bd,stroke:#6c757d,color:#000
     
-    Known --> Disconnected: Heartbeat timeout
-    Disconnected --> Known: Reconnects
+    style background fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
     
-    Known --> PreparingForInstallation: Install triggered
-    PreparingForInstallation --> Installing: Disk ready
-    Installing --> InstallingInProgress: Writing to disk
-    InstallingInProgress --> InstallingPendingUserAction: Boot order issue
-    InstallingInProgress --> Installed: Success
-    InstallingInProgress --> Error: Failure
-    
-    InstallingPendingUserAction --> InstallingInProgress: Fixed
-    
-    Known --> Disabled: User disabled
-    Disabled --> Known: Re-enabled
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ### Cluster States
 
 ```mermaid
-stateDiagram-v2
-    [*] --> PendingForInput: Cluster created
-    PendingForInput --> Insufficient: Partial config
-    PendingForInput --> Ready: Full config + hosts ready
+flowchart LR
+    subgraph background[" "]
+        direction LR
+        
+        START(( )) -->|Cluster created| PendingForInput
+        
+        PendingForInput -->|Partial config| Insufficient
+        PendingForInput -->|Full config| Ready
+        Insufficient -->|Validations pass| Ready
+        Ready -->|Validation fails| Insufficient
+        
+        Ready -->|Install triggered| Preparing[PreparingFor<br/>Installation]
+        Preparing -->|Ignition ready| Installing
+        Installing -->|Hosts installed| Finalizing
+        Finalizing -->|Operators ready| Installed
+        
+        Installing -->|Fatal error| Error
+        Finalizing -->|Timeout| Error
+    end
     
-    Insufficient --> Ready: All validations pass
-    Ready --> Insufficient: Validation fails
+    style START fill:#2d3748,stroke:#2d3748
+    style PendingForInput fill:#adb5bd,stroke:#6c757d,color:#000
+    style Insufficient fill:#adb5bd,stroke:#6c757d,color:#000
+    style Ready fill:#adb5bd,stroke:#6c757d,color:#000
+    style Preparing fill:#457b9d,stroke:#1d3557,color:#fff
+    style Installing fill:#457b9d,stroke:#1d3557,color:#fff
+    style Finalizing fill:#457b9d,stroke:#1d3557,color:#fff
+    style Installed fill:#52796f,stroke:#354f52,color:#fff
+    style Error fill:#c9184a,stroke:#a4133c,color:#fff
     
-    Ready --> PreparingForInstallation: Install triggered
-    PreparingForInstallation --> Installing: Ignition ready
-    Installing --> Finalizing: Hosts installed
-    Finalizing --> Installed: Operators ready
+    style background fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
     
-    Installing --> Error: Fatal error
-    Finalizing --> Error: Timeout/failure
+    linkStyle default stroke:#2d3748,stroke-width:2px
+    linkStyle 9,10 stroke:#9b2c2c,stroke-width:2px
 ```
 
 ## Key Features
@@ -297,17 +390,29 @@ Agents test connectivity to each other:
 
 ```mermaid
 graph TB
-    subgraph "Connectivity Matrix"
+    subgraph matrix["Connectivity Matrix"]
         H1[Host 1] <-->|L3 + L2| H2[Host 2]
         H2 <-->|L3 + L2| H3[Host 3]
         H3 <-->|L3 + L2| H1
     end
     
-    subgraph "External Checks"
+    subgraph external["External Checks"]
         H1 -->|NTP| NTP[NTP Server]
         H1 -->|DNS| DNS[DNS Server]
         H1 -->|API| API[api.cluster.example.com]
     end
+    
+    style H1 fill:#52796f,stroke:#354f52,color:#fff
+    style H2 fill:#52796f,stroke:#354f52,color:#fff
+    style H3 fill:#52796f,stroke:#354f52,color:#fff
+    style NTP fill:#b56576,stroke:#8d4e5a,color:#fff
+    style DNS fill:#b56576,stroke:#8d4e5a,color:#fff
+    style API fill:#b56576,stroke:#8d4e5a,color:#fff
+    
+    style matrix fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style external fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ### Static Network Configuration

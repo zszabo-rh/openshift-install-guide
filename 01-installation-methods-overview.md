@@ -8,33 +8,60 @@ Use this flowchart to determine which installation method fits your needs:
 
 ```mermaid
 flowchart TD
-    START((Start)) --> Q1{Need managed<br/>control plane?}
-    
-    Q1 -->|Yes| HCP[Hosted Control Planes]
-    Q1 -->|No| Q2{Cloud or<br/>On-Premise?}
-    
-    Q2 -->|Cloud| Q3{Full automation<br/>acceptable?}
-    Q2 -->|On-Premise| Q4{Bare metal or<br/>Virtual?}
-    
-    Q3 -->|Yes| IPI[IPI - Installer Provisioned]
-    Q3 -->|No| UPI[UPI - User Provisioned]
-    
-    Q4 -->|Bare Metal| Q5{Multiple clusters<br/>at scale?}
-    Q4 -->|Virtual| Q6{Disconnected<br/>environment?}
-    
-    Q5 -->|Yes| ZTP[ZTP with SiteConfig]
-    Q5 -->|No| Q7{Hub cluster<br/>available?}
-    
-    Q6 -->|Yes| ABI[Agent-Based Installer]
-    Q6 -->|No| ASSISTED[Assisted Installer]
-    
-    Q7 -->|Yes| ASSISTED_ONPREM[Assisted via MCE]
-    Q7 -->|No| ABI
-    
-    subgraph "Special Cases"
-        Q8{SNO with<br/>fast recovery?} -->|Yes| IBI[Image-Based Install]
-        Q9{Fully disconnected<br/>with pre-built image?} -->|Yes| APPLIANCE[Appliance]
+    subgraph background[" "]
+        START((Start)) --> Q1{Need managed<br/>control plane?}
+        
+        Q1 -->|Yes| HCP[Hosted Control Planes]
+        Q1 -->|No| Q2{Cloud or<br/>On-Premise?}
+        
+        Q2 -->|Cloud| Q3{Full automation<br/>acceptable?}
+        Q2 -->|On-Premise| Q4{Bare metal or<br/>Virtual?}
+        
+        Q3 -->|Yes| IPI[IPI - Installer Provisioned]
+        Q3 -->|No| UPI[UPI - User Provisioned]
+        
+        Q4 -->|Bare Metal| Q5{Multiple clusters<br/>at scale?}
+        Q4 -->|Virtual| Q6{Disconnected<br/>environment?}
+        
+        Q5 -->|Yes| ZTP[ZTP with SiteConfig]
+        Q5 -->|No| Q7{Hub cluster<br/>available?}
+        
+        Q6 -->|Yes| ABI[Agent-Based Installer]
+        Q6 -->|No| ASSISTED[Assisted Installer]
+        
+        Q7 -->|Yes| ASSISTED_ONPREM[Assisted via MCE]
+        Q7 -->|No| ABI
+        
+        subgraph special["Special Cases"]
+            Q8{SNO with<br/>fast recovery?} -->|Yes| IBI[Image-Based Install]
+            Q9{Fully disconnected<br/>with pre-built image?} -->|Yes| APPLIANCE[Appliance]
+        end
     end
+    
+    style START fill:#e56b6f,stroke:#b85450,color:#fff
+    style Q1 fill:#457b9d,stroke:#1d3557,color:#fff
+    style Q2 fill:#457b9d,stroke:#1d3557,color:#fff
+    style Q3 fill:#457b9d,stroke:#1d3557,color:#fff
+    style Q4 fill:#457b9d,stroke:#1d3557,color:#fff
+    style Q5 fill:#457b9d,stroke:#1d3557,color:#fff
+    style Q6 fill:#457b9d,stroke:#1d3557,color:#fff
+    style Q7 fill:#457b9d,stroke:#1d3557,color:#fff
+    style Q8 fill:#457b9d,stroke:#1d3557,color:#fff
+    style Q9 fill:#457b9d,stroke:#1d3557,color:#fff
+    style HCP fill:#52796f,stroke:#354f52,color:#fff
+    style IPI fill:#52796f,stroke:#354f52,color:#fff
+    style UPI fill:#52796f,stroke:#354f52,color:#fff
+    style ZTP fill:#52796f,stroke:#354f52,color:#fff
+    style ABI fill:#52796f,stroke:#354f52,color:#fff
+    style ASSISTED fill:#52796f,stroke:#354f52,color:#fff
+    style ASSISTED_ONPREM fill:#52796f,stroke:#354f52,color:#fff
+    style IBI fill:#52796f,stroke:#354f52,color:#fff
+    style APPLIANCE fill:#52796f,stroke:#354f52,color:#fff
+    
+    style background fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
+    style special fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Comparison Matrix
@@ -281,13 +308,13 @@ The installation methods are not always mutually exclusive. Here's how they rela
 
 ```mermaid
 graph TB
-    subgraph "Core Technologies"
+    subgraph core["Core Technologies"]
         INSTALLER[openshift-install binary]
         ASSISTED_SVC[assisted-service]
         HIVE[Hive Operator]
     end
     
-    subgraph "Deployment Methods"
+    subgraph methods["Deployment Methods"]
         IPI --> INSTALLER
         UPI --> INSTALLER
         ABI --> ASSISTED_SVC
@@ -298,17 +325,40 @@ graph TB
         ASSISTED_SVC -->|"generates ignition via"| INSTALLER
     end
     
-    subgraph "Orchestration Layers"
+    subgraph orchestration["Orchestration Layers"]
         ZTP --> ONPREM
         ZTP --> IBI_OP[IBI Operator]
         SITECONFIG[SiteConfig] --> ZTP
     end
     
-    subgraph "Specialized"
+    subgraph specialized["Specialized"]
         IBI_OP --> ASSISTED_SVC
         APPLIANCE --> ABI
         HCP --> HYPERSHIFT[HyperShift]
     end
+    
+    style INSTALLER fill:#52796f,stroke:#354f52,color:#fff
+    style ASSISTED_SVC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style HIVE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style IPI fill:#355070,stroke:#1d3557,color:#fff
+    style UPI fill:#355070,stroke:#1d3557,color:#fff
+    style ABI fill:#355070,stroke:#1d3557,color:#fff
+    style SAAS fill:#355070,stroke:#1d3557,color:#fff
+    style ONPREM fill:#355070,stroke:#1d3557,color:#fff
+    style ZTP fill:#b56576,stroke:#8d4e5a,color:#fff
+    style IBI_OP fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SITECONFIG fill:#6d597a,stroke:#4a3f50,color:#fff
+    style APPLIANCE fill:#355070,stroke:#1d3557,color:#fff
+    style HCP fill:#355070,stroke:#1d3557,color:#fff
+    style HYPERSHIFT fill:#6d597a,stroke:#4a3f50,color:#fff
+    
+    style core fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    style methods fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style orchestration fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style specialized fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
+    linkStyle 7 stroke:#8a2a3a,stroke-width:3px
 ```
 
 > **Note:** The assisted-service internally uses the `openshift-install` binary to generate Ignition configs. This is an implementation detail—users interact only with the Assisted APIs or CRDs.

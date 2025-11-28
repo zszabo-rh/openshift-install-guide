@@ -8,7 +8,7 @@ The OpenShift Appliance is a pre-built disk image containing all OpenShift compo
 
 ```mermaid
 graph TB
-    subgraph "Build Environment (Connected)"
+    subgraph build["Build Environment (Connected)"]
         BUILDER[openshift-appliance tool]
         CONFIG[ApplianceConfig]
         RELEASE[Release Images]
@@ -19,7 +19,7 @@ graph TB
         OC_MIRROR --> BUILDER
     end
     
-    subgraph "Appliance Disk"
+    subgraph disk["Appliance Disk"]
         RHCOS[RHCOS Base]
         REGISTRY[Embedded Registry]
         IMAGES[Container Images]
@@ -31,7 +31,7 @@ graph TB
         BUILDER --> AGENT_SVC
     end
     
-    subgraph "Deployment (Air-Gapped)"
+    subgraph deploy["Deployment (Air-Gapped)"]
         TARGET[Target Host]
         
         RHCOS --> TARGET
@@ -41,6 +41,23 @@ graph TB
     end
     
     TARGET --> CLUSTER[Running OpenShift]
+    
+    style BUILDER fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CONFIG fill:#355070,stroke:#1d3557,color:#fff
+    style RELEASE fill:#355070,stroke:#1d3557,color:#fff
+    style OC_MIRROR fill:#6d597a,stroke:#4a3f50,color:#fff
+    style RHCOS fill:#52796f,stroke:#354f52,color:#fff
+    style REGISTRY fill:#7d8597,stroke:#5c6378,color:#fff
+    style IMAGES fill:#355070,stroke:#1d3557,color:#fff
+    style AGENT_SVC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style TARGET fill:#52796f,stroke:#354f52,color:#fff
+    style CLUSTER fill:#52796f,stroke:#354f52,color:#fff
+    
+    style build fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style disk fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style deploy fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## When to Use Appliance
@@ -81,25 +98,39 @@ Builds the appliance disk image:
 
 ```mermaid
 graph TB
-    subgraph "Appliance Disk Image"
+    subgraph diskimage["Appliance Disk Image"]
         RHCOS[RHCOS Live Image]
         
-        subgraph "Registry Partition"
+        subgraph registry["Registry Partition"]
             REG[Container Registry]
             OCP_IMAGES[OpenShift Images]
             OPERATOR_IMAGES[Operator Images]
         end
         
-        subgraph "Config Partition"
+        subgraph config["Config Partition"]
             AGENT_CONFIG[Agent Configuration]
             MANIFESTS[Installation Manifests]
         end
         
-        subgraph "Services"
+        subgraph services["Services"]
             AGENT[Assisted Agent]
-            SERVICE[Embedded assisted-service]
+            SERVICE[Embedded Coordination Service]
         end
     end
+    
+    style RHCOS fill:#52796f,stroke:#354f52,color:#fff
+    style REG fill:#7d8597,stroke:#5c6378,color:#fff
+    style OCP_IMAGES fill:#355070,stroke:#1d3557,color:#fff
+    style OPERATOR_IMAGES fill:#355070,stroke:#1d3557,color:#fff
+    style AGENT_CONFIG fill:#355070,stroke:#1d3557,color:#fff
+    style MANIFESTS fill:#355070,stroke:#1d3557,color:#fff
+    style AGENT fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SERVICE fill:#6d597a,stroke:#4a3f50,color:#fff
+    
+    style diskimage fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
+    style registry fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style config fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    style services fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
 ```
 
 ## Building an Appliance
@@ -157,10 +188,16 @@ export LIBGUESTFS_BACKEND=direct
 ### Build Process
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant Tool as openshift-appliance
-    participant OCI as Container Registry
-    participant FS as File System
+    box rgb(190,184,168) Build Tool
+        participant Tool as openshift-appliance
+    end
+    
+    box rgb(180,175,160) External Resources
+        participant OCI as Container Registry
+        participant FS as File System
+    end
     
     Tool->>Tool: Parse ApplianceConfig
     Tool->>OCI: Pull RHCOS image
@@ -280,7 +317,7 @@ The appliance includes a local container registry:
 
 ```mermaid
 graph LR
-    subgraph "During Installation"
+    subgraph install["During Installation"]
         KUBELET[kubelet]
         CRIO[CRI-O]
         REG[Embedded Registry<br/>:5000]
@@ -288,6 +325,14 @@ graph LR
         KUBELET --> CRIO
         CRIO -->|Pull images| REG
     end
+    
+    style KUBELET fill:#52796f,stroke:#354f52,color:#fff
+    style CRIO fill:#6d597a,stroke:#4a3f50,color:#fff
+    style REG fill:#7d8597,stroke:#5c6378,color:#fff
+    
+    style install fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ### Mirror Configuration

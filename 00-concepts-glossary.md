@@ -10,14 +10,14 @@ In multi-cluster management, OpenShift uses a **hub-and-spoke** model:
 
 ```mermaid
 graph TB
-    subgraph "Hub Cluster"
+    subgraph hub["Hub Cluster"]
         MCE[MCE Operator]
         HIVE[Hive]
         ASSISTED[Assisted Service]
         ACM[ACM - optional]
     end
     
-    subgraph "Spoke Clusters"
+    subgraph spokes["Spoke Clusters"]
         S1[Spoke Cluster 1]
         S2[Spoke Cluster 2]
         S3[Spoke Cluster 3]
@@ -26,6 +26,19 @@ graph TB
     MCE --> S1
     MCE --> S2
     MCE --> S3
+    
+    style MCE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style HIVE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ASSISTED fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ACM fill:#6d597a,stroke:#4a3f50,color:#fff
+    style S1 fill:#52796f,stroke:#354f52,color:#fff
+    style S2 fill:#52796f,stroke:#354f52,color:#fff
+    style S3 fill:#52796f,stroke:#354f52,color:#fff
+    
+    style hub fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style spokes fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:3px
 ```
 
 | Term | Definition |
@@ -44,15 +57,29 @@ These terms describe **when hosts are assigned to clusters** during the discover
 
 ```mermaid
 graph LR
-    subgraph "Early Binding"
+    subgraph early["Early Binding"]
         IE1[InfraEnv] -->|clusterRef| CD1[ClusterDeployment]
         A1[Agent] -->|Auto-bound| CD1
     end
     
-    subgraph "Late Binding"
+    subgraph late["Late Binding"]
         IE2[InfraEnv] -.->|No clusterRef| POOL[Host Pool]
         A2[Agent] -->|Manual bind later| CD2[ClusterDeployment]
     end
+    
+    style IE1 fill:#6d597a,stroke:#4a3f50,color:#fff
+    style IE2 fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CD1 fill:#355070,stroke:#1d3557,color:#fff
+    style CD2 fill:#355070,stroke:#1d3557,color:#fff
+    style A1 fill:#355070,stroke:#1d3557,color:#fff
+    style A2 fill:#355070,stroke:#1d3557,color:#fff
+    style POOL fill:#7d8597,stroke:#5c6378,color:#fff
+    
+    style early fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style late fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
+    linkStyle 2 stroke:#2d3748,stroke-width:2px,stroke-dasharray:5
 ```
 
 | Binding Type | When Hosts Bind | Use Case | Configuration |
@@ -114,7 +141,7 @@ OpenShift supports two API paradigms for cluster installation:
 
 ```mermaid
 graph TB
-    subgraph "Imperative (REST API)"
+    subgraph imperative["Imperative (REST API)"]
         direction TB
         U1[User] -->|1. POST /clusters| API[REST API]
         U1 -->|2. POST /infra-envs| API
@@ -123,12 +150,25 @@ graph TB
         API -->|Each step| STATE[System State]
     end
     
-    subgraph "Declarative (Kubernetes)"
+    subgraph declarative["Declarative (Kubernetes)"]
         direction TB
         U2[User] -->|Apply YAML| K8S[Kubernetes API]
         K8S --> CTRL[Controllers]
         CTRL -->|Reconcile continuously| STATE2[Desired State]
     end
+    
+    style U1 fill:#e56b6f,stroke:#b85450,color:#fff
+    style U2 fill:#e56b6f,stroke:#b85450,color:#fff
+    style API fill:#b56576,stroke:#8d4e5a,color:#fff
+    style K8S fill:#355070,stroke:#1d3557,color:#fff
+    style CTRL fill:#6d597a,stroke:#4a3f50,color:#fff
+    style STATE fill:#7d8597,stroke:#5c6378,color:#fff
+    style STATE2 fill:#52796f,stroke:#354f52,color:#fff
+    
+    style imperative fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style declarative fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 **Imperative (REST API):**
@@ -226,10 +266,21 @@ Each OCP version has a matching RHCOS version. The installer automatically selec
 
 ```mermaid
 graph LR
-    TAG[Tag: 4.14.10] --> DIGEST1[sha256:abc123...]
-    TAG2[Tag: latest] --> DIGEST1
+    subgraph background[" "]
+        TAG[Tag: 4.14.10] --> DIGEST1[sha256:abc123...]
+        TAG2[Tag: latest] --> DIGEST1
+        
+        DIGEST1 --> IMAGE[Actual Image Bytes]
+    end
     
-    DIGEST1 --> IMAGE[Actual Image Bytes]
+    style TAG fill:#457b9d,stroke:#1d3557,color:#fff
+    style TAG2 fill:#457b9d,stroke:#1d3557,color:#fff
+    style DIGEST1 fill:#6d597a,stroke:#4a3f50,color:#fff
+    style IMAGE fill:#52796f,stroke:#354f52,color:#fff
+    
+    style background fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 | Identifier | Format | Mutable | Example |
@@ -277,20 +328,30 @@ For disconnected installations, images must be mirrored to a local registry:
 
 ```mermaid
 graph LR
-    subgraph "Connected"
+    subgraph connected["Connected"]
         QUAY[quay.io/openshift-release-dev]
     end
     
-    subgraph "Mirror Process"
+    subgraph mirror["Mirror Process"]
         TOOL[oc-mirror]
     end
     
-    subgraph "Disconnected"
+    subgraph disconnected["Disconnected"]
         LOCAL[registry.example.com/ocp4]
     end
     
     QUAY -->|Mirror| TOOL
     TOOL -->|Push| LOCAL
+    
+    style QUAY fill:#b56576,stroke:#8d4e5a,color:#fff
+    style TOOL fill:#6d597a,stroke:#4a3f50,color:#fff
+    style LOCAL fill:#52796f,stroke:#354f52,color:#fff
+    
+    style connected fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style mirror fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style disconnected fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:3px
 ```
 
 ```bash

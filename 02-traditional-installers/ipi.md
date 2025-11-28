@@ -5,13 +5,19 @@ IPI is the fully automated installation method where `openshift-install` provisi
 ## Overview
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant User
-    participant Installer as openshift-install
-    participant Cloud as Cloud Provider API
-    participant Bootstrap as Bootstrap Node
-    participant Masters as Control Plane
-    participant Workers as Worker Nodes
+    box rgb(190,184,168) User & Installer
+        participant User
+        participant Installer as openshift-install
+    end
+    
+    box rgb(180,175,160) Infrastructure
+        participant Cloud as Cloud Provider API
+        participant Bootstrap as Bootstrap Node
+        participant Masters as Control Plane
+        participant Workers as Worker Nodes
+    end
 
     User->>Installer: openshift-install create cluster
     Installer->>Installer: Generate install-config.yaml
@@ -73,14 +79,29 @@ The installer operates on a dependency graph of "targets":
 
 ```mermaid
 graph TD
-    IC[install-config] --> M[manifests]
-    M --> IG[ignition-configs]
-    IG --> C[cluster]
+    subgraph background[" "]
+        IC[install-config] --> M[manifests]
+        M --> IG[ignition-configs]
+        IG --> C[cluster]
+        
+        IC -->|"openshift-install create install-config"| IC_FILE[install-config.yaml]
+        M -->|"openshift-install create manifests"| M_DIR[manifests/]
+        IG -->|"openshift-install create ignition-configs"| IG_FILES[*.ign files]
+        C -->|"openshift-install create cluster"| RUNNING[Running Cluster]
+    end
     
-    IC -->|"openshift-install create install-config"| IC_FILE[install-config.yaml]
-    M -->|"openshift-install create manifests"| M_DIR[manifests/]
-    IG -->|"openshift-install create ignition-configs"| IG_FILES[*.ign files]
-    C -->|"openshift-install create cluster"| RUNNING[Running Cluster]
+    style IC fill:#457b9d,stroke:#1d3557,color:#fff
+    style M fill:#457b9d,stroke:#1d3557,color:#fff
+    style IG fill:#457b9d,stroke:#1d3557,color:#fff
+    style C fill:#457b9d,stroke:#1d3557,color:#fff
+    style IC_FILE fill:#52796f,stroke:#354f52,color:#fff
+    style M_DIR fill:#52796f,stroke:#354f52,color:#fff
+    style IG_FILES fill:#52796f,stroke:#354f52,color:#fff
+    style RUNNING fill:#52796f,stroke:#354f52,color:#fff
+    
+    style background fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ### install-config.yaml
@@ -157,14 +178,14 @@ The bootstrap node is a temporary machine that:
 
 ```mermaid
 graph TB
-    subgraph "Bootstrap Node (Temporary)"
+    subgraph bootstrap["Bootstrap Node (Temporary)"]
         MCS[Machine Config Server]
         ETCD_BOOT[etcd - bootstrap]
         API_BOOT[kube-apiserver]
         BOOTKUBE[bootkube.service]
     end
     
-    subgraph "Control Plane Nodes"
+    subgraph controlplane["Control Plane Nodes"]
         ETCD[etcd cluster]
         API[kube-apiserver]
         CM[controller-manager]
@@ -175,6 +196,20 @@ graph TB
     ETCD_BOOT -->|"Joins/Migrates"| ETCD
     MCS -->|"Serves configs"| API
     API_BOOT -->|"Hands off"| API
+    
+    style MCS fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ETCD_BOOT fill:#7d8597,stroke:#5c6378,color:#fff
+    style API_BOOT fill:#6d597a,stroke:#4a3f50,color:#fff
+    style BOOTKUBE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ETCD fill:#7d8597,stroke:#5c6378,color:#fff
+    style API fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CM fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SCHED fill:#6d597a,stroke:#4a3f50,color:#fff
+    
+    style bootstrap fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style controlplane fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 For detailed bootstrap process documentation, see [Bootstrap Process](bootstrap-process.md).

@@ -5,12 +5,18 @@ UPI is the installation method where users provision all infrastructure accordin
 ## Overview
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant User
-    participant Installer as openshift-install
-    participant Infra as User Infrastructure
-    participant Bootstrap as Bootstrap Node
-    participant Masters as Control Plane
+    box rgb(190,184,168) User & Installer
+        participant User
+        participant Installer as openshift-install
+    end
+    
+    box rgb(180,175,160) Infrastructure
+        participant Infra as User Infrastructure
+        participant Bootstrap as Bootstrap Node
+        participant Masters as Control Plane
+    end
     
     User->>Installer: create install-config
     Installer-->>User: install-config.yaml
@@ -183,7 +189,7 @@ oc get csr -o name | xargs oc adm certificate approve
 
 ```mermaid
 graph LR
-    subgraph "User Provisions"
+    subgraph provisions["User Provisions"]
         SERVERS[Physical Servers]
         NETWORK[Network/VLANs]
         DNS[DNS Server]
@@ -192,7 +198,7 @@ graph LR
         STORAGE[Shared Storage]
     end
     
-    subgraph "Boot Method"
+    subgraph boot["Boot Method"]
         PXE[PXE Boot]
         ISO[ISO Boot]
         UEFI[UEFI HTTP Boot]
@@ -201,6 +207,21 @@ graph LR
     SERVERS --> PXE
     SERVERS --> ISO
     SERVERS --> UEFI
+    
+    style SERVERS fill:#52796f,stroke:#354f52,color:#fff
+    style NETWORK fill:#52796f,stroke:#354f52,color:#fff
+    style DNS fill:#52796f,stroke:#354f52,color:#fff
+    style DHCP fill:#52796f,stroke:#354f52,color:#fff
+    style LB fill:#52796f,stroke:#354f52,color:#fff
+    style STORAGE fill:#52796f,stroke:#354f52,color:#fff
+    style PXE fill:#355070,stroke:#1d3557,color:#fff
+    style ISO fill:#355070,stroke:#1d3557,color:#fff
+    style UEFI fill:#355070,stroke:#1d3557,color:#fff
+    
+    style provisions fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style boot fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 For bare metal, you need:

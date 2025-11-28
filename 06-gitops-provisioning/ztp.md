@@ -8,27 +8,27 @@ ZTP uses a [hub-and-spoke architecture](../00-concepts-glossary.md#hub-and-spoke
 
 ```mermaid
 graph TB
-    subgraph "Git Repository"
+    subgraph git["Git Repository"]
         SITE_CONFIGS[Site Configurations]
         POLICIES[Policy Templates]
         KUSTOMIZE[Kustomization]
     end
     
-    subgraph "Hub Cluster"
+    subgraph hub["Hub Cluster"]
         ARGOCD[ArgoCD]
         SITECONFIG[SiteConfig Operator]
         ACM[ACM/MCE]
         TALM[TALM]
     end
     
-    subgraph "Rendered Resources"
+    subgraph rendered["Rendered Resources"]
         CD[ClusterDeployment]
         ACI[AgentClusterInstall]
         IE[InfraEnv]
         BMH[BareMetalHost]
     end
     
-    subgraph "Edge Sites"
+    subgraph edge["Edge Sites"]
         SNO1[SNO Site 1]
         SNO2[SNO Site 2]
         SNON[SNO Site N]
@@ -49,6 +49,28 @@ graph TB
     TALM --> SNO1
     TALM --> SNO2
     TALM --> SNON
+    
+    style SITE_CONFIGS fill:#355070,stroke:#1d3557,color:#fff
+    style POLICIES fill:#355070,stroke:#1d3557,color:#fff
+    style KUSTOMIZE fill:#355070,stroke:#1d3557,color:#fff
+    style ARGOCD fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SITECONFIG fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ACM fill:#6d597a,stroke:#4a3f50,color:#fff
+    style TALM fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CD fill:#355070,stroke:#1d3557,color:#fff
+    style ACI fill:#355070,stroke:#1d3557,color:#fff
+    style IE fill:#355070,stroke:#1d3557,color:#fff
+    style BMH fill:#355070,stroke:#1d3557,color:#fff
+    style SNO1 fill:#52796f,stroke:#354f52,color:#fff
+    style SNO2 fill:#52796f,stroke:#354f52,color:#fff
+    style SNON fill:#52796f,stroke:#354f52,color:#fff
+    
+    style git fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    style hub fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style rendered fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style edge fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Key Components
@@ -72,12 +94,21 @@ Provides cluster lifecycle management, policy framework, and observability.
 ## ZTP Workflow
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant Git
-    participant ArgoCD
-    participant SiteConfig as SiteConfig Operator
-    participant Assisted
-    participant Site as Edge Site
+    box rgb(168,176,184) Git Repository
+        participant Git
+    end
+    
+    box rgb(196,191,170) Hub Cluster
+        participant ArgoCD
+        participant SiteConfig as SiteConfig Operator
+        participant Assisted
+    end
+    
+    box rgb(184,212,208) Edge
+        participant Site as Edge Site
+    end
     
     Note over Git: Developer commits ClusterInstance
     Git->>ArgoCD: Sync trigger

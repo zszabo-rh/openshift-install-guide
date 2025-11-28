@@ -5,14 +5,20 @@ This document contains comprehensive Mermaid diagrams for each OpenShift install
 ## IPI Installation Flow
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant User
-    participant Installer as openshift-install
-    participant Terraform
-    participant Cloud as Cloud Provider
-    participant Bootstrap
-    participant Masters
-    participant Workers
+    box rgb(190,184,168) User & Build Tools
+        participant User
+        participant Installer as openshift-install
+        participant Terraform
+    end
+    
+    box rgb(180,175,160) Infrastructure
+        participant Cloud as Cloud Provider
+        participant Bootstrap
+        participant Masters
+        participant Workers
+    end
 
     User->>Installer: create cluster
     Installer->>Installer: Generate install-config
@@ -48,23 +54,23 @@ sequenceDiagram
 
 ```mermaid
 graph TB
-    subgraph "Hub Cluster"
+    subgraph hub["Hub Cluster"]
         MCE[MCE Operator]
         ASC[AgentServiceConfig]
         
-        subgraph "Assisted Components"
+        subgraph assisted["Assisted Components"]
             SERVICE[assisted-service]
             IMAGE_SVC[assisted-image-service]
             DB[(PostgreSQL)]
         end
         
-        subgraph "Integration"
+        subgraph integration["Integration"]
             HIVE[Hive Controller]
             BMO[Baremetal Operator]
             BMAC[BMAC Controller]
         end
         
-        subgraph "CRDs"
+        subgraph crds["CRDs"]
             CD[ClusterDeployment]
             ACI[AgentClusterInstall]
             IE[InfraEnv]
@@ -73,7 +79,7 @@ graph TB
         end
     end
     
-    subgraph "Target Hosts"
+    subgraph hosts["Target Hosts"]
         H1[Host 1]
         H2[Host 2]
         H3[Host 3]
@@ -99,22 +105,53 @@ graph TB
     H1 --> AGENT
     H2 --> AGENT
     H3 --> AGENT
+    
+    style MCE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ASC fill:#355070,stroke:#1d3557,color:#fff
+    style SERVICE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style IMAGE_SVC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style DB fill:#7d8597,stroke:#5c6378,color:#fff
+    style HIVE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style BMO fill:#6d597a,stroke:#4a3f50,color:#fff
+    style BMAC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CD fill:#355070,stroke:#1d3557,color:#fff
+    style ACI fill:#355070,stroke:#1d3557,color:#fff
+    style IE fill:#355070,stroke:#1d3557,color:#fff
+    style AGENT fill:#355070,stroke:#1d3557,color:#fff
+    style BMH fill:#355070,stroke:#1d3557,color:#fff
+    style H1 fill:#52796f,stroke:#354f52,color:#fff
+    style H2 fill:#52796f,stroke:#354f52,color:#fff
+    style H3 fill:#52796f,stroke:#354f52,color:#fff
+    
+    style hub fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
+    style assisted fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style integration fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style crds fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    style hosts fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Agent-Based Installer Flow
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant User
-    participant Installer as openshift-install
-    participant ISO as Agent ISO
-    participant Rendezvous as Rendezvous Host
-    participant Other as Other Hosts
+    box rgb(190,184,168) User & Build
+        participant User
+        participant Installer as openshift-install
+        participant ISO as Agent ISO
+    end
+    
+    box rgb(180,175,160) Target Infrastructure
+        participant Rendezvous as Rendezvous Host
+        participant Other as Other Hosts
+    end
     
     User->>Installer: agent create image
     Installer->>Installer: Parse install-config.yaml
     Installer->>Installer: Parse agent-config.yaml
-    Installer->>ISO: Embed assisted-service
+    Installer->>ISO: Embed coordination service
     Installer->>ISO: Embed agent
     Installer->>ISO: Embed ZTP manifests
     Installer-->>User: agent.iso
@@ -145,7 +182,7 @@ sequenceDiagram
 
 ```mermaid
 graph TB
-    subgraph "Seed Cluster"
+    subgraph seed["Seed Cluster"]
         SEED_SNO[Running SNO]
         LCA[Lifecycle Agent]
         SEED[Seed Image<br/>~15-20 GB]
@@ -154,10 +191,10 @@ graph TB
         LCA -->|Generate| SEED
     end
     
-    subgraph "Hub Cluster"
+    subgraph hub["Hub Cluster"]
         IBI_OP[IBI Operator]
         
-        subgraph "CRDs"
+        subgraph crds["CRDs"]
             ICI[ImageClusterInstall]
             CD_IBI[ClusterDeployment]
             BMH_IBI[BareMetalHost]
@@ -171,7 +208,7 @@ graph TB
         IBI_OP --> CONFIG_ISO
     end
     
-    subgraph "Target Host"
+    subgraph target["Target Host"]
         DISK[(Disk)]
         RECERT[Reconfiguration<br/>via recert]
         NEW_SNO[New SNO Cluster]
@@ -181,18 +218,37 @@ graph TB
         DISK --> RECERT
         RECERT --> NEW_SNO
     end
+    
+    style SEED_SNO fill:#52796f,stroke:#354f52,color:#fff
+    style LCA fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SEED fill:#7d8597,stroke:#5c6378,color:#fff
+    style IBI_OP fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ICI fill:#355070,stroke:#1d3557,color:#fff
+    style CD_IBI fill:#355070,stroke:#1d3557,color:#fff
+    style BMH_IBI fill:#355070,stroke:#1d3557,color:#fff
+    style CONFIG_ISO fill:#355070,stroke:#1d3557,color:#fff
+    style DISK fill:#7d8597,stroke:#5c6378,color:#fff
+    style RECERT fill:#6d597a,stroke:#4a3f50,color:#fff
+    style NEW_SNO fill:#52796f,stroke:#354f52,color:#fff
+    
+    style seed fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style hub fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style crds fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    style target fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Hosted Control Planes Architecture
 
 ```mermaid
 graph TB
-    subgraph "Management Cluster"
-        subgraph "HyperShift Namespace"
+    subgraph mgmt["Management Cluster"]
+        subgraph hypershiftns["HyperShift Namespace"]
             HO[HyperShift Operator]
         end
         
-        subgraph "HCP Namespace: clusters-my-hosted"
+        subgraph hcpns["HCP Namespace: clusters-my-hosted"]
             CPO[Control Plane Operator]
             ETCD1[etcd-0]
             ETCD2[etcd-1]
@@ -207,8 +263,8 @@ graph TB
         NP[NodePool]
     end
     
-    subgraph "Worker Infrastructure"
-        subgraph "CAPI Resources"
+    subgraph workers["Worker Infrastructure"]
+        subgraph capi["CAPI Resources"]
             MD[MachineDeployment]
             MS[MachineSet]
             M1[Machine 1]
@@ -249,27 +305,55 @@ graph TB
     IGN -->|Ignition| W1
     IGN -->|Ignition| W2
     IGN -->|Ignition| W3
+    
+    style HO fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CPO fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ETCD1 fill:#7d8597,stroke:#5c6378,color:#fff
+    style ETCD2 fill:#7d8597,stroke:#5c6378,color:#fff
+    style ETCD3 fill:#7d8597,stroke:#5c6378,color:#fff
+    style KAPI fill:#6d597a,stroke:#4a3f50,color:#fff
+    style KCM fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SCHED fill:#6d597a,stroke:#4a3f50,color:#fff
+    style IGN fill:#6d597a,stroke:#4a3f50,color:#fff
+    style HC fill:#355070,stroke:#1d3557,color:#fff
+    style NP fill:#355070,stroke:#1d3557,color:#fff
+    style MD fill:#355070,stroke:#1d3557,color:#fff
+    style MS fill:#355070,stroke:#1d3557,color:#fff
+    style M1 fill:#355070,stroke:#1d3557,color:#fff
+    style M2 fill:#355070,stroke:#1d3557,color:#fff
+    style M3 fill:#355070,stroke:#1d3557,color:#fff
+    style W1 fill:#52796f,stroke:#354f52,color:#fff
+    style W2 fill:#52796f,stroke:#354f52,color:#fff
+    style W3 fill:#52796f,stroke:#354f52,color:#fff
+    
+    style mgmt fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
+    style hypershiftns fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style hcpns fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style workers fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    style capi fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## ZTP with SiteConfig Flow
 
 ```mermaid
 graph TB
-    subgraph "Git Repository"
+    subgraph git["Git Repository"]
         SITES[Site Configurations]
         TEMPLATES[Templates]
         POLICIES[Policies]
     end
     
-    subgraph "Hub Cluster"
+    subgraph hub["Hub Cluster"]
         ARGOCD[ArgoCD]
         
-        subgraph "SiteConfig"
+        subgraph siteconfig["SiteConfig"]
             SC_OP[SiteConfig Operator]
             CI[ClusterInstance]
         end
         
-        subgraph "Rendered Resources"
+        subgraph rendered["Rendered Resources"]
             CD[ClusterDeployment]
             ACI[AgentClusterInstall]
             IE[InfraEnv]
@@ -277,17 +361,17 @@ graph TB
             NMS[NMStateConfig]
         end
         
-        subgraph "Installation"
+        subgraph installation["Installation"]
             ASSISTED[Assisted Service]
         end
         
-        subgraph "Post-Install"
+        subgraph postinstall["Post-Install"]
             TALM[TALM]
             POLICY[Policies]
         end
     end
     
-    subgraph "Edge Sites"
+    subgraph edge["Edge Sites"]
         S1[Site 1 SNO]
         S2[Site 2 SNO]
         S3[Site N SNO]
@@ -319,13 +403,41 @@ graph TB
     POLICY --> S1
     POLICY --> S2
     POLICY --> S3
+    
+    style SITES fill:#355070,stroke:#1d3557,color:#fff
+    style TEMPLATES fill:#355070,stroke:#1d3557,color:#fff
+    style POLICIES fill:#355070,stroke:#1d3557,color:#fff
+    style ARGOCD fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SC_OP fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CI fill:#b56576,stroke:#8d4e5a,color:#fff
+    style CD fill:#355070,stroke:#1d3557,color:#fff
+    style ACI fill:#355070,stroke:#1d3557,color:#fff
+    style IE fill:#355070,stroke:#1d3557,color:#fff
+    style BMH fill:#355070,stroke:#1d3557,color:#fff
+    style NMS fill:#355070,stroke:#1d3557,color:#fff
+    style ASSISTED fill:#6d597a,stroke:#4a3f50,color:#fff
+    style TALM fill:#6d597a,stroke:#4a3f50,color:#fff
+    style POLICY fill:#355070,stroke:#1d3557,color:#fff
+    style S1 fill:#52796f,stroke:#354f52,color:#fff
+    style S2 fill:#52796f,stroke:#354f52,color:#fff
+    style S3 fill:#52796f,stroke:#354f52,color:#fff
+    
+    style git fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    style hub fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
+    style siteconfig fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style rendered fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style installation fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    style postinstall fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    style edge fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Controller Watch Relationships
 
 ```mermaid
 graph TB
-    subgraph "CRDs"
+    subgraph crds["CRDs"]
         ASC[AgentServiceConfig]
         CD[ClusterDeployment]
         ACI[AgentClusterInstall]
@@ -337,7 +449,7 @@ graph TB
         AC[AgentClassification]
     end
     
-    subgraph "Controllers"
+    subgraph controllers["Controllers"]
         ASCC[AgentServiceConfig<br/>Controller]
         CDC[ClusterDeployments<br/>Controller]
         IEC[InfraEnv<br/>Controller]
@@ -371,34 +483,48 @@ graph TB
     AC --> ACC
     AGENT -.->|watches| ACC
     
-    style ASCC fill:#f9f,stroke:#333
-    style CDC fill:#f9f,stroke:#333
-    style IEC fill:#f9f,stroke:#333
-    style AGENTC fill:#f9f,stroke:#333
-    style BMAC fill:#f9f,stroke:#333
-    style PPIC fill:#f9f,stroke:#333
-    style ACC fill:#f9f,stroke:#333
+    style ASC fill:#355070,stroke:#1d3557,color:#fff
+    style CD fill:#355070,stroke:#1d3557,color:#fff
+    style ACI fill:#355070,stroke:#1d3557,color:#fff
+    style IE fill:#355070,stroke:#1d3557,color:#fff
+    style AGENT fill:#355070,stroke:#1d3557,color:#fff
+    style BMH fill:#355070,stroke:#1d3557,color:#fff
+    style NMS fill:#355070,stroke:#1d3557,color:#fff
+    style PPI fill:#355070,stroke:#1d3557,color:#fff
+    style AC fill:#355070,stroke:#1d3557,color:#fff
+    style ASCC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CDC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style IEC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style AGENTC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style BMAC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style PPIC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ACC fill:#6d597a,stroke:#4a3f50,color:#fff
+    
+    style crds fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    style controllers fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## CRD Ownership and References
 
 ```mermaid
 graph LR
-    subgraph "Cluster Definition"
+    subgraph clusterdef["Cluster Definition"]
         CI[ClusterInstance]
         CD[ClusterDeployment]
         ACI[AgentClusterInstall]
         ICI[ImageClusterInstall]
     end
     
-    subgraph "Infrastructure"
+    subgraph infra["Infrastructure"]
         IE[InfraEnv]
         BMH[BareMetalHost]
         NMS[NMStateConfig]
         AGENT[Agent]
     end
     
-    subgraph "Supporting"
+    subgraph supporting["Supporting"]
         CIS[ClusterImageSet]
         SECRET[Pull Secret]
     end
@@ -424,74 +550,130 @@ graph LR
     
     BMH -->|matched by| AGENT
     
-    linkStyle 0,1,2,3,4 stroke:#00f,stroke-width:2px
-    linkStyle 5,6,7,8,9,10,11,12,13,14 stroke:#090,stroke-width:1px
+    style CI fill:#b56576,stroke:#8d4e5a,color:#fff
+    style CD fill:#355070,stroke:#1d3557,color:#fff
+    style ACI fill:#355070,stroke:#1d3557,color:#fff
+    style ICI fill:#355070,stroke:#1d3557,color:#fff
+    style IE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style BMH fill:#6d597a,stroke:#4a3f50,color:#fff
+    style NMS fill:#6d597a,stroke:#4a3f50,color:#fff
+    style AGENT fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CIS fill:#7d8597,stroke:#5c6378,color:#fff
+    style SECRET fill:#7d8597,stroke:#5c6378,color:#fff
+    
+    style clusterdef fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style infra fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style supporting fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle 0,1,2,3,4 stroke:#8a2a3a,stroke-width:3px
+    linkStyle 5,6,7,8,9,10,11,12,13,14 stroke:#2d3748,stroke-width:2px
 ```
 
 ## State Machine: Cluster Installation
 
 ```mermaid
-stateDiagram-v2
-    [*] --> PendingForInput: Cluster Created
+flowchart LR
+    subgraph background[" "]
+        direction LR
+        
+        START(( )) -->|Cluster Created| PendingForInput
+        
+        PendingForInput -->|Partial Config| Insufficient
+        PendingForInput -->|Full Config| Ready
+        Insufficient -->|Validations Pass| Ready
+        Ready -->|Validation Fails| Insufficient
+        
+        Ready -->|User Triggers| Preparing[PreparingFor<br/>Installation]
+        Preparing -->|Ignition Ready| Installing
+        Installing -->|Hosts Installed| Finalizing
+        Finalizing -->|Operators Ready| Installed
+        
+        Installing -->|Fatal Error| Error
+        Finalizing -->|Timeout| Error
+        
+        Ready -->|User Cancels| Cancelled
+        Installing -->|User Cancels| Cancelled
+    end
     
-    PendingForInput --> Insufficient: Partial Config
-    PendingForInput --> Ready: Full Config
+    style START fill:#2d3748,stroke:#2d3748
+    style PendingForInput fill:#adb5bd,stroke:#6c757d,color:#000
+    style Insufficient fill:#adb5bd,stroke:#6c757d,color:#000
+    style Ready fill:#adb5bd,stroke:#6c757d,color:#000
+    style Preparing fill:#457b9d,stroke:#1d3557,color:#fff
+    style Installing fill:#457b9d,stroke:#1d3557,color:#fff
+    style Finalizing fill:#457b9d,stroke:#1d3557,color:#fff
+    style Installed fill:#52796f,stroke:#354f52,color:#fff
+    style Error fill:#c9184a,stroke:#a4133c,color:#fff
+    style Cancelled fill:#e9c46a,stroke:#c9a227,color:#000
     
-    Insufficient --> Ready: All Validations Pass
-    Ready --> Insufficient: Validation Fails
+    style background fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
     
-    Ready --> PreparingForInstallation: User Triggers Install
-    PreparingForInstallation --> Installing: Ignition Ready
-    Installing --> Finalizing: Hosts Installed
-    Finalizing --> Installed: Operators Ready
-    
-    Installing --> Error: Fatal Error
-    Finalizing --> Error: Timeout
-    
-    Ready --> Cancelled: User Cancels
-    Installing --> Cancelled: User Cancels
+    linkStyle default stroke:#2d3748,stroke-width:2px
+    linkStyle 9,10 stroke:#9b2c2c,stroke-width:2px
 ```
 
 ## State Machine: Host Discovery
 
 ```mermaid
-stateDiagram-v2
-    [*] --> Discovering: Host Boots
+flowchart LR
+    subgraph background[" "]
+        direction LR
+        
+        START(( )) -->|Host Boots| Discovering
+        
+        Discovering -->|Validations Pass| Known
+        Discovering -->|Validations Fail| Insufficient
+        Discovering -->|Needs Config| PendingForInput
+        
+        PendingForInput -->|Config Provided| Known
+        Insufficient -->|Issues Fixed| Known
+        Known -->|New Issues| Insufficient
+        
+        Known -->|Heartbeat Timeout| Disconnected
+        Disconnected -->|Reconnects| Known
+        
+        Known -->|Install Triggered| Preparing[PreparingFor<br/>Installation]
+        Preparing -->|Disk Ready| Installing
+        Installing -->|Writing| InProgress[Installing<br/>InProgress]
+        InProgress -->|Success| Installed
+        InProgress -->|Failure| Error
+        InProgress -->|Boot Order| PendingAction[Pending<br/>UserAction]
+        
+        Known -->|User Disables| Disabled
+        Disabled -->|Re-enabled| Known
+    end
     
-    Discovering --> Known: Validations Pass
-    Discovering --> Insufficient: Validations Fail
-    Discovering --> PendingForInput: Needs Config
+    style START fill:#2d3748,stroke:#2d3748
+    style Discovering fill:#adb5bd,stroke:#6c757d,color:#000
+    style Known fill:#adb5bd,stroke:#6c757d,color:#000
+    style Insufficient fill:#adb5bd,stroke:#6c757d,color:#000
+    style PendingForInput fill:#adb5bd,stroke:#6c757d,color:#000
+    style Disconnected fill:#e9c46a,stroke:#c9a227,color:#000
+    style Preparing fill:#457b9d,stroke:#1d3557,color:#fff
+    style Installing fill:#457b9d,stroke:#1d3557,color:#fff
+    style InProgress fill:#457b9d,stroke:#1d3557,color:#fff
+    style PendingAction fill:#e9c46a,stroke:#c9a227,color:#000
+    style Installed fill:#52796f,stroke:#354f52,color:#fff
+    style Error fill:#c9184a,stroke:#a4133c,color:#fff
+    style Disabled fill:#adb5bd,stroke:#6c757d,color:#000
     
-    PendingForInput --> Known: Config Provided
-    Insufficient --> Known: Issues Fixed
-    Known --> Insufficient: New Issues
+    style background fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
     
-    Known --> Disconnected: Heartbeat Timeout
-    Disconnected --> Known: Reconnects
-    
-    Known --> PreparingForInstallation: Install Triggered
-    PreparingForInstallation --> Installing: Disk Ready
-    Installing --> InstallingInProgress: Writing
-    InstallingInProgress --> Installed: Success
-    InstallingInProgress --> Error: Failure
-    InstallingInProgress --> InstallingPendingUserAction: Boot Order Issue
-    
-    Known --> Disabled: User Disables
-    Disabled --> Known: Re-enabled
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Comparison: Installation Methods
 
 ```mermaid
 graph TD
-    subgraph "Decision Factors"
+    subgraph factors["Decision Factors"]
         D1[Connectivity?]
         D2[Hub Cluster?]
         D3[Cluster Type?]
         D4[Scale?]
     end
     
-    subgraph "Methods"
+    subgraph methods["Methods"]
         IPI[IPI]
         UPI[UPI]
         SAAS[Assisted SaaS]
@@ -510,6 +692,24 @@ graph TD
     D1 -->|Disconnected + Fast SNO| IBI
     D2 -->|Yes + Multi-tenant| HCP
     D4 -->|Large Scale| ZTP
+    
+    style D1 fill:#457b9d,stroke:#1d3557,color:#fff
+    style D2 fill:#457b9d,stroke:#1d3557,color:#fff
+    style D3 fill:#457b9d,stroke:#1d3557,color:#fff
+    style D4 fill:#457b9d,stroke:#1d3557,color:#fff
+    style IPI fill:#52796f,stroke:#354f52,color:#fff
+    style UPI fill:#52796f,stroke:#354f52,color:#fff
+    style SAAS fill:#52796f,stroke:#354f52,color:#fff
+    style MCE fill:#52796f,stroke:#354f52,color:#fff
+    style ABI fill:#52796f,stroke:#354f52,color:#fff
+    style IBI fill:#52796f,stroke:#354f52,color:#fff
+    style HCP fill:#52796f,stroke:#354f52,color:#fff
+    style ZTP fill:#52796f,stroke:#354f52,color:#fff
+    
+    style factors fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style methods fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Related Documentation

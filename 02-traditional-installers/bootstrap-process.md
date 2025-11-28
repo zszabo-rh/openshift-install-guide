@@ -12,8 +12,8 @@ OpenShift has a unique challenge: every node needs configuration from the cluste
 
 ```mermaid
 graph TB
-    subgraph "Phase 1: Bootstrap Active"
-        subgraph "Bootstrap Node"
+    subgraph phase1["Phase 1: Bootstrap Active"]
+        subgraph bootstrapnode["Bootstrap Node"]
             MCS[Machine Config Server<br/>:22623]
             ETCD_B[etcd bootstrap member]
             API_B[kube-apiserver<br/>bootstrap]
@@ -21,7 +21,7 @@ graph TB
             RELEASE[release-image-pivot]
         end
         
-        subgraph "Control Plane Nodes"
+        subgraph cpnodes["Control Plane Nodes"]
             KUBELET1[kubelet]
             KUBELET2[kubelet]
             KUBELET3[kubelet]
@@ -32,20 +32,44 @@ graph TB
         MCS -->|Ignition| KUBELET3
     end
     
-    subgraph "Phase 2: Handoff"
+    subgraph phase2["Phase 2: Handoff"]
         ETCD_B -->|Data migration| ETCD[etcd cluster]
         API_B -->|Handoff| API[Production API]
     end
+    
+    style MCS fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ETCD_B fill:#7d8597,stroke:#5c6378,color:#fff
+    style API_B fill:#6d597a,stroke:#4a3f50,color:#fff
+    style BOOTKUBE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style RELEASE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style KUBELET1 fill:#52796f,stroke:#354f52,color:#fff
+    style KUBELET2 fill:#52796f,stroke:#354f52,color:#fff
+    style KUBELET3 fill:#52796f,stroke:#354f52,color:#fff
+    style ETCD fill:#7d8597,stroke:#5c6378,color:#fff
+    style API fill:#6d597a,stroke:#4a3f50,color:#fff
+    
+    style phase1 fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
+    style bootstrapnode fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style cpnodes fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    style phase2 fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Detailed Timeline
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant B as Bootstrap
-    participant M1 as Master 1
-    participant M2 as Master 2
-    participant M3 as Master 3
+    box rgb(207,197,181) Bootstrap
+        participant B as Bootstrap
+    end
+    
+    box rgb(184,212,208) Control Plane
+        participant M1 as Master 1
+        participant M2 as Master 2
+        participant M3 as Master 3
+    end
     
     Note over B: Boot with bootstrap.ign
     B->>B: Start temporary etcd
@@ -151,17 +175,17 @@ The MCS runs on the bootstrap node and serves full Ignition configs to nodes.
 
 ```mermaid
 graph LR
-    subgraph "Step 1"
+    subgraph step1["Step 1"]
         E_B1[etcd-bootstrap<br/>single member]
     end
     
-    subgraph "Step 2"
+    subgraph step2["Step 2"]
         E_B2[etcd-bootstrap]
         E_M1[etcd-0]
         E_B2 --- E_M1
     end
     
-    subgraph "Step 3"
+    subgraph step3["Step 3"]
         E_B3[etcd-bootstrap]
         E_M2[etcd-0]
         E_M3[etcd-1]
@@ -169,7 +193,7 @@ graph LR
         E_M2 --- E_M3
     end
     
-    subgraph "Step 4 (Final)"
+    subgraph step4["Step 4 (Final)"]
         E_M4[etcd-0]
         E_M5[etcd-1]
         E_M6[etcd-2]
@@ -177,6 +201,23 @@ graph LR
         E_M5 --- E_M6
         E_M6 --- E_M4
     end
+    
+    style E_B1 fill:#adb5bd,stroke:#6c757d,color:#000
+    style E_B2 fill:#adb5bd,stroke:#6c757d,color:#000
+    style E_B3 fill:#adb5bd,stroke:#6c757d,color:#000
+    style E_M1 fill:#52796f,stroke:#354f52,color:#fff
+    style E_M2 fill:#52796f,stroke:#354f52,color:#fff
+    style E_M3 fill:#52796f,stroke:#354f52,color:#fff
+    style E_M4 fill:#52796f,stroke:#354f52,color:#fff
+    style E_M5 fill:#52796f,stroke:#354f52,color:#fff
+    style E_M6 fill:#52796f,stroke:#354f52,color:#fff
+    
+    style step1 fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style step2 fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style step3 fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    style step4 fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ### etcd Member Management
@@ -211,19 +252,37 @@ The Cluster Version Operator (CVO) starts on the bootstrap node and begins deplo
 
 ```mermaid
 graph TD
-    CVO[Cluster Version Operator]
+    subgraph background[" "]
+        CVO[Cluster Version Operator]
+        
+        CVO --> MCO[Machine Config Operator]
+        CVO --> KAPI[kube-apiserver]
+        CVO --> INGRESS[Ingress Operator]
+        CVO --> DNS[DNS Operator]
+        CVO --> NET[Network Operator]
+        CVO --> AUTH[Authentication Operator]
+        CVO --> CONSOLE[Console Operator]
+        
+        MCO -->|Manages| NODES[Node Configuration]
+        INGRESS -->|Creates| ROUTER[Ingress Router]
+        NET -->|Configures| CNI[CNI/OVN]
+    end
     
-    CVO --> MCO[Machine Config Operator]
-    CVO --> KAPI[kube-apiserver]
-    CVO --> INGRESS[Ingress Operator]
-    CVO --> DNS[DNS Operator]
-    CVO --> NET[Network Operator]
-    CVO --> AUTH[Authentication Operator]
-    CVO --> CONSOLE[Console Operator]
+    style CVO fill:#b56576,stroke:#8d4e5a,color:#fff
+    style MCO fill:#6d597a,stroke:#4a3f50,color:#fff
+    style KAPI fill:#6d597a,stroke:#4a3f50,color:#fff
+    style INGRESS fill:#6d597a,stroke:#4a3f50,color:#fff
+    style DNS fill:#6d597a,stroke:#4a3f50,color:#fff
+    style NET fill:#6d597a,stroke:#4a3f50,color:#fff
+    style AUTH fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CONSOLE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style NODES fill:#52796f,stroke:#354f52,color:#fff
+    style ROUTER fill:#52796f,stroke:#354f52,color:#fff
+    style CNI fill:#52796f,stroke:#354f52,color:#fff
     
-    MCO -->|Manages| NODES[Node Configuration]
-    INGRESS -->|Creates| ROUTER[Ingress Router]
-    NET -->|Configures| CNI[CNI/OVN]
+    style background fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Bootstrap Completion Criteria
@@ -250,18 +309,36 @@ openshift-install wait-for bootstrap-complete --dir=cluster --log-level=debug
 
 ```mermaid
 flowchart TD
-    START[Bootstrap Issues] --> Q1{etcd healthy?}
-    Q1 -->|No| E1[Check etcd logs<br/>Verify networking]
-    Q1 -->|Yes| Q2{API accessible?}
+    subgraph background[" "]
+        START[Bootstrap Issues] --> Q1{etcd healthy?}
+        Q1 -->|No| E1[Check etcd logs<br/>Verify networking]
+        Q1 -->|Yes| Q2{API accessible?}
+        
+        Q2 -->|No| E2[Check MCS<br/>Verify DNS/LB]
+        Q2 -->|Yes| Q3{Masters joining?}
+        
+        Q3 -->|No| E3[Check master Ignition<br/>Verify MCS accessibility]
+        Q3 -->|Yes| Q4{bootkube completing?}
+        
+        Q4 -->|No| E4[Check bootkube.service logs<br/>Look for operator failures]
+        Q4 -->|Yes| SUCCESS[Bootstrap Complete]
+    end
     
-    Q2 -->|No| E2[Check MCS<br/>Verify DNS/LB]
-    Q2 -->|Yes| Q3{Masters joining?}
+    style START fill:#adb5bd,stroke:#6c757d,color:#000
+    style Q1 fill:#457b9d,stroke:#1d3557,color:#fff
+    style Q2 fill:#457b9d,stroke:#1d3557,color:#fff
+    style Q3 fill:#457b9d,stroke:#1d3557,color:#fff
+    style Q4 fill:#457b9d,stroke:#1d3557,color:#fff
+    style E1 fill:#e9c46a,stroke:#c9a227,color:#000
+    style E2 fill:#e9c46a,stroke:#c9a227,color:#000
+    style E3 fill:#e9c46a,stroke:#c9a227,color:#000
+    style E4 fill:#e9c46a,stroke:#c9a227,color:#000
+    style SUCCESS fill:#52796f,stroke:#354f52,color:#fff
     
-    Q3 -->|No| E3[Check master Ignition<br/>Verify MCS accessibility]
-    Q3 -->|Yes| Q4{bootkube completing?}
+    style background fill:#beb8a8,stroke:#706858,stroke-width:2px,color:#2d2d2d
     
-    Q4 -->|No| E4[Check bootkube.service logs<br/>Look for operator failures]
-    Q4 -->|Yes| SUCCESS[Bootstrap Complete]
+    linkStyle default stroke:#2d3748,stroke-width:2px
+    linkStyle 1,3,5,7 stroke:#9b2c2c,stroke-width:2px
 ```
 
 ### Gathering Bootstrap Logs

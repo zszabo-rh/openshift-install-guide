@@ -6,7 +6,7 @@ The Agent-Based Installer is a standalone installation method that embeds the As
 
 ```mermaid
 graph TB
-    subgraph "Build Phase"
+    subgraph build["Build Phase"]
         IC[install-config.yaml]
         AC[agent-config.yaml]
         CMD[openshift-install agent create image]
@@ -17,18 +17,36 @@ graph TB
         CMD --> ISO
     end
     
-    subgraph "Boot Phase"
+    subgraph boot["Boot Phase"]
         ISO -->|Boot| HOST[Target Host]
         HOST --> AGENT[Discovery Agent]
-        HOST --> SERVICE[Embedded assisted-service]
+        HOST --> SERVICE[Embedded Coordination Service]
         HOST --> REGISTER[Agent Registers]
     end
     
-    subgraph "Install Phase"
+    subgraph install["Install Phase"]
         REGISTER --> VALIDATE[Validations]
         VALIDATE --> INSTALL[Installation]
         INSTALL --> CLUSTER[Running Cluster]
     end
+    
+    style IC fill:#355070,stroke:#1d3557,color:#fff
+    style AC fill:#355070,stroke:#1d3557,color:#fff
+    style CMD fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ISO fill:#52796f,stroke:#354f52,color:#fff
+    style HOST fill:#52796f,stroke:#354f52,color:#fff
+    style AGENT fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SERVICE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style REGISTER fill:#457b9d,stroke:#1d3557,color:#fff
+    style VALIDATE fill:#457b9d,stroke:#1d3557,color:#fff
+    style INSTALL fill:#457b9d,stroke:#1d3557,color:#fff
+    style CLUSTER fill:#52796f,stroke:#354f52,color:#fff
+    
+    style build fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style boot fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    style install fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## When to Use ABI
@@ -171,14 +189,20 @@ openshift-install agent create image --dir=.
 Boot all nodes from the generated ISO. The rendezvousIP host becomes the coordination point:
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant M0 as Master 0 (rendezvous)
-    participant M1 as Master 1
-    participant M2 as Master 2
-    participant W as Workers
+    box rgb(207,197,181) Rendezvous Host
+        participant M0 as Master 0 (rendezvous)
+    end
+    
+    box rgb(184,212,208) Other Nodes
+        participant M1 as Master 1
+        participant M2 as Master 2
+        participant W as Workers
+    end
     
     Note over M0: Boot from ISO
-    M0->>M0: Start embedded assisted-service
+    M0->>M0: Start embedded coordination service
     M0->>M0: Start agent
     
     Note over M1,W: Boot from ISO
@@ -210,7 +234,7 @@ The agent ISO contains embedded minimal services for coordination (internally us
 
 ```mermaid
 graph TB
-    subgraph "Agent ISO Contents"
+    subgraph contents["Agent ISO Contents"]
         RHCOS[RHCOS Live Image]
         AGENT[assisted-installer-agent]
         SERVICE[Embedded Coordination Service]
@@ -225,6 +249,18 @@ graph TB
     SERVICE --> STATE
     AGENT --> SERVICE
     CONFIG --> SERVICE
+    
+    style RHCOS fill:#52796f,stroke:#354f52,color:#fff
+    style AGENT fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SERVICE fill:#6d597a,stroke:#4a3f50,color:#fff
+    style STATE fill:#7d8597,stroke:#5c6378,color:#fff
+    style IMAGES fill:#355070,stroke:#1d3557,color:#fff
+    style CONFIG fill:#355070,stroke:#1d3557,color:#fff
+    style BOOT fill:#52796f,stroke:#354f52,color:#fff
+    
+    style contents fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 > **Implementation Note:** The embedded service is based on assisted-service running in a lightweight mode with local state storage. This is an implementation detail—the user experience is through the generated ISO and `openshift-install agent` commands.
@@ -243,20 +279,28 @@ One host (specified by `rendezvousIP`) acts as the coordination point:
 ### Agent Registration
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant Agent
-    participant Service as Embedded Service
-    participant Cluster as Cluster State
+    box rgb(184,212,208) Agent Process
+        participant Agent
+    end
+    
+    box rgb(207,197,181) Coordination
+        participant Service as Embedded Service
+        participant Cluster as Cluster State
+    end
     
     Agent->>Agent: Read MAC address
     Agent->>Agent: Match to host config
     Agent->>Service: POST /v2/infra-envs/{id}/hosts
     Service->>Cluster: Register host
     
-    loop Every 60 seconds
-        Agent->>Service: Hardware inventory
-        Agent->>Service: Connectivity results
-        Service->>Cluster: Update host status
+    rect rgb(180,175,160)
+        loop Every 60 seconds
+            Agent->>Service: Hardware inventory
+            Agent->>Service: Connectivity results
+            Service->>Cluster: Update host status
+        end
     end
 ```
 

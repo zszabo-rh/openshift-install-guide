@@ -6,7 +6,7 @@ Image-Based Install (IBI) is an installation method that deploys Single Node Ope
 
 ```mermaid
 graph TB
-    subgraph "Seed Cluster"
+    subgraph seed["Seed Cluster"]
         SEED_SNO[Running SNO]
         LCA[Lifecycle Agent]
         SEED_IMG[Seed Image]
@@ -15,7 +15,7 @@ graph TB
         LCA -->|Generate| SEED_IMG
     end
     
-    subgraph "Hub Cluster"
+    subgraph hub["Hub Cluster"]
         IBI_OP[IBI Operator]
         ICI[ImageClusterInstall]
         CD[ClusterDeployment]
@@ -26,7 +26,7 @@ graph TB
         ICI --> BMH
     end
     
-    subgraph "Target Host"
+    subgraph target["Target Host"]
         DISK[Disk]
         CONFIG[Cluster Config]
         TARGET_SNO[New SNO]
@@ -35,6 +35,23 @@ graph TB
         CONFIG --> DISK
         DISK --> TARGET_SNO
     end
+    
+    style SEED_SNO fill:#52796f,stroke:#354f52,color:#fff
+    style LCA fill:#6d597a,stroke:#4a3f50,color:#fff
+    style SEED_IMG fill:#7d8597,stroke:#5c6378,color:#fff
+    style IBI_OP fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ICI fill:#355070,stroke:#1d3557,color:#fff
+    style CD fill:#355070,stroke:#1d3557,color:#fff
+    style BMH fill:#355070,stroke:#1d3557,color:#fff
+    style DISK fill:#7d8597,stroke:#5c6378,color:#fff
+    style CONFIG fill:#355070,stroke:#1d3557,color:#fff
+    style TARGET_SNO fill:#52796f,stroke:#354f52,color:#fff
+    
+    style seed fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style hub fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style target fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Key Concepts
@@ -83,12 +100,12 @@ Runs on hub clusters to:
 
 ```mermaid
 graph LR
-    subgraph "IBI Operator Controllers"
+    subgraph controllers["IBI Operator Controllers"]
         ICIC[ImageClusterInstall<br/>Reconciler]
         MON[ImageClusterInstall<br/>Monitor]
     end
     
-    subgraph "Watches"
+    subgraph watches["Watches"]
         ICI[ImageClusterInstall]
         CD[ClusterDeployment]
         BMH[BareMetalHost]
@@ -98,6 +115,17 @@ graph LR
     CD --> ICIC
     BMH --> ICIC
     ICI --> MON
+    
+    style ICIC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style MON fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ICI fill:#355070,stroke:#1d3557,color:#fff
+    style CD fill:#355070,stroke:#1d3557,color:#fff
+    style BMH fill:#355070,stroke:#1d3557,color:#fff
+    
+    style controllers fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style watches fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Seed Image Creation
@@ -207,11 +235,17 @@ spec:
 ### Step 2: IBI Operator Actions
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant User
-    participant IBI as IBI Operator
-    participant BMO as Baremetal Operator
-    participant Host as Target Host
+    box rgb(190,184,168) User & Operators
+        participant User
+        participant IBI as IBI Operator
+        participant BMO as Baremetal Operator
+    end
+    
+    box rgb(180,175,160) Infrastructure
+        participant Host as Target Host
+    end
     
     User->>IBI: Create ImageClusterInstall
     IBI->>IBI: Generate config ISO

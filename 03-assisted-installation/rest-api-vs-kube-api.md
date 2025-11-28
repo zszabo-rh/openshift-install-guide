@@ -19,14 +19,14 @@ See [Key Concepts & Glossary](../00-concepts-glossary.md#declarative-vs-imperati
 
 ```mermaid
 graph TB
-    subgraph "SaaS / Standalone Mode"
+    subgraph saas["SaaS / Standalone Mode"]
         REST[REST API]
         REST --> CLUSTER_R[Cluster Resource]
         REST --> HOST_R[Host Resource]
         REST --> INFRA_R[InfraEnv Resource]
     end
     
-    subgraph "Kubernetes / MCE Mode"
+    subgraph kube["Kubernetes / MCE Mode"]
         KUBE[Kubernetes API]
         KUBE --> CD[ClusterDeployment]
         KUBE --> ACI[AgentClusterInstall]
@@ -34,7 +34,7 @@ graph TB
         KUBE --> AGENT[Agent CRD]
     end
     
-    subgraph "Internal"
+    subgraph internal["Internal"]
         BM[bminventory]
         DB[(Database)]
     end
@@ -42,6 +42,24 @@ graph TB
     REST --> BM
     KUBE --> BM
     BM --> DB
+    
+    style REST fill:#b56576,stroke:#8d4e5a,color:#fff
+    style CLUSTER_R fill:#355070,stroke:#1d3557,color:#fff
+    style HOST_R fill:#355070,stroke:#1d3557,color:#fff
+    style INFRA_R fill:#355070,stroke:#1d3557,color:#fff
+    style KUBE fill:#355070,stroke:#1d3557,color:#fff
+    style CD fill:#355070,stroke:#1d3557,color:#fff
+    style ACI fill:#355070,stroke:#1d3557,color:#fff
+    style IE fill:#355070,stroke:#1d3557,color:#fff
+    style AGENT fill:#355070,stroke:#1d3557,color:#fff
+    style BM fill:#6d597a,stroke:#4a3f50,color:#fff
+    style DB fill:#7d8597,stroke:#5c6378,color:#fff
+    
+    style saas fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style kube fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style internal fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## API Comparison
@@ -70,13 +88,13 @@ graph TB
 
 ```mermaid
 graph LR
-    subgraph "REST API"
+    subgraph rest["REST API"]
         CLUSTER[Cluster]
         HOST[Host]
         INFRA_REST[InfraEnv]
     end
     
-    subgraph "Kubernetes API"
+    subgraph kubeapi["Kubernetes API"]
         CD[ClusterDeployment]
         ACI[AgentClusterInstall]
         INFRA_CRD[InfraEnv CRD]
@@ -87,6 +105,19 @@ graph LR
     CLUSTER <-.->|Maps to| ACI
     HOST <-.->|Maps to| AGENT
     INFRA_REST <-.->|Maps to| INFRA_CRD
+    
+    style CLUSTER fill:#b56576,stroke:#8d4e5a,color:#fff
+    style HOST fill:#b56576,stroke:#8d4e5a,color:#fff
+    style INFRA_REST fill:#b56576,stroke:#8d4e5a,color:#fff
+    style CD fill:#355070,stroke:#1d3557,color:#fff
+    style ACI fill:#355070,stroke:#1d3557,color:#fff
+    style INFRA_CRD fill:#355070,stroke:#1d3557,color:#fff
+    style AGENT fill:#355070,stroke:#1d3557,color:#fff
+    
+    style rest fill:#cfc5b5,stroke:#8d7a5a,stroke-width:2px,color:#2d2d2d
+    style kubeapi fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px,stroke-dasharray:5
 ```
 
 ### Cluster ↔ ClusterDeployment + AgentClusterInstall
@@ -259,12 +290,18 @@ status:
 In Kubernetes mode, controllers sync CRDs with internal state:
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'lineColor': '#2d3748', 'actorLineColor': '#2d3748' }}}%%
 sequenceDiagram
-    participant User
-    participant K8s as Kubernetes API
-    participant Ctrl as Controllers
-    participant BM as bminventory
-    participant DB as Database
+    box rgb(190,184,168) User & API
+        participant User
+        participant K8s as Kubernetes API
+    end
+    
+    box rgb(180,175,160) Internal Components
+        participant Ctrl as Controllers
+        participant BM as bminventory
+        participant DB as Database
+    end
     
     User->>K8s: Create ClusterDeployment
     K8s->>Ctrl: Reconcile event
@@ -309,7 +346,7 @@ The assisted-service contains controllers that bridge CRDs to the internal API:
 
 ```mermaid
 graph TB
-    subgraph "Kubernetes Controllers"
+    subgraph controllers["Kubernetes Controllers"]
         CDC[ClusterDeployments<br/>Controller]
         ACIC[AgentClusterInstall<br/>Controller]
         IEC[InfraEnv<br/>Controller]
@@ -317,11 +354,11 @@ graph TB
         BMAC[BMAC<br/>Controller]
     end
     
-    subgraph "Internal API"
+    subgraph internal["Internal API"]
         BM[bminventory.Installer]
     end
     
-    subgraph "CRDs Watched"
+    subgraph crds["CRDs Watched"]
         CD[ClusterDeployment]
         ACI[AgentClusterInstall]
         IE[InfraEnv]
@@ -342,6 +379,24 @@ graph TB
     IEC --> BM
     AC --> BM
     BMAC --> BM
+    
+    style CDC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style ACIC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style IEC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style AC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style BMAC fill:#6d597a,stroke:#4a3f50,color:#fff
+    style BM fill:#6d597a,stroke:#4a3f50,color:#fff
+    style CD fill:#355070,stroke:#1d3557,color:#fff
+    style ACI fill:#355070,stroke:#1d3557,color:#fff
+    style IE fill:#355070,stroke:#1d3557,color:#fff
+    style AGENT fill:#355070,stroke:#1d3557,color:#fff
+    style BMH fill:#355070,stroke:#1d3557,color:#fff
+    
+    style controllers fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
+    style internal fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
+    style crds fill:#b8d4d0,stroke:#3d5a52,stroke-width:2px,color:#2d2d2d
+    
+    linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
 ## Status and Conditions
