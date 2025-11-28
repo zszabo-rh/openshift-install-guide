@@ -2,6 +2,10 @@
 
 The Assisted Installer supports two API paradigms: a REST API and a Kubernetes-native API. This document explains the differences, use cases, and how they map to each other.
 
+**API References:**
+- REST API: [swagger.yaml](https://github.com/openshift/assisted-service/blob/master/swagger.yaml) | [Swagger UI](https://generator.swagger.io/?url=https://raw.githubusercontent.com/openshift/assisted-service/master/swagger.yaml)
+- Kubernetes CRDs: [api/v1beta1](https://github.com/openshift/assisted-service/tree/master/api/v1beta1), [api/hiveextension](https://github.com/openshift/assisted-service/tree/master/api/hiveextension)
+
 ## Declarative vs Imperative
 
 Before diving into the specifics, it's important to understand the fundamental difference between these API styles:
@@ -66,6 +70,8 @@ graph TB
 
 ### REST API Resources
 
+See the [full OpenAPI specification](https://github.com/openshift/assisted-service/blob/master/swagger.yaml) for all endpoints.
+
 | Resource | Description | Endpoint |
 |----------|-------------|----------|
 | **Cluster** | Cluster configuration and state | `/v2/clusters` |
@@ -75,9 +81,9 @@ graph TB
 
 ### Kubernetes CRDs
 
-| CRD | API Group | Description |
-|-----|-----------|-------------|
-| **ClusterDeployment** | hive.openshift.io | Cluster definition (Hive) |
+| CRD | API Group | Source |
+|-----|-----------|--------|
+| **ClusterDeployment** | hive.openshift.io | [clusterdeployment_types.go](https://github.com/openshift/hive/blob/master/apis/hive/v1/clusterdeployment_types.go) |
 | **AgentClusterInstall** | extensions.hive.openshift.io | Assisted-specific cluster config |
 | **InfraEnv** | agent-install.openshift.io | Discovery environment |
 | **Agent** | agent-install.openshift.io | Discovered host |
@@ -510,17 +516,17 @@ Not all REST API features have CRD equivalents and vice versa:
 
 | Feature | REST API | Kubernetes API |
 |---------|----------|----------------|
-| Cluster management | ✅ | ✅ (via CRDs) |
-| Host management | ✅ | ✅ (Agent CRD) |
-| InfraEnv management | ✅ | ✅ (InfraEnv CRD) |
-| Events | ✅ | ⚠️ (via conditions/events) |
-| Logs download | ✅ | ⚠️ (via cluster access) |
-| Manifest management | ✅ | ✅ (ConfigMaps) |
-| Late binding | ✅ | ✅ |
-| Static networking | ✅ | ✅ (NMStateConfig) |
-| Agent classification | ❌ | ✅ |
-| Hive integration | ❌ | ✅ |
-| BMO integration | ❌ | ✅ |
+| Cluster management | Yes | Yes (via CRDs) |
+| Host management | Yes | Yes (Agent CRD) |
+| InfraEnv management | Yes | Yes (InfraEnv CRD) |
+| Events | Yes | Partial (via conditions/events) |
+| Logs download | Yes | Partial (via cluster access) |
+| Manifest management | Yes | Yes (ConfigMaps) |
+| Late binding | Yes | Yes |
+| Static networking | Yes | Yes (NMStateConfig) |
+| Agent classification | No | Yes |
+| Hive integration | No | Yes |
+| BMO integration | No | Yes |
 
 ## Related Documentation
 

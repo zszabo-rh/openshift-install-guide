@@ -415,8 +415,8 @@ status:
 |--------|----------|-----|-----|
 | Cluster types | Any | Any | SNO only |
 | Installation time | 45-90 min | 45-90 min | 15-20 min |
-| Pre-validation | ✅ | ✅ | ❌ |
-| Air-gapped | With mirror | With mirror | ✅ Native |
+| Pre-validation | Yes | Yes | No |
+| Air-gapped | With mirror | With mirror | Yes (Native) |
 | Day 2 changes | N/A | N/A | N/A |
 | Image size | ~1 GB ISO | ~1 GB ISO | ~15-20 GB |
 
@@ -469,6 +469,7 @@ spec:
 
 ## Related Documentation
 
+- [Image-Based Installation Overview](index.md) - Section overview
 - [Appliance](appliance.md) - For fully pre-built disk images
 - [ZTP with SiteConfig](../06-gitops-provisioning/ztp.md) - GitOps integration
 - [CRD Reference](../08-crd-reference/installation-crds.md) - ImageClusterInstall CRD

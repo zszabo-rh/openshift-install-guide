@@ -2,6 +2,11 @@
 
 The Agent-Based Installer is a standalone installation method that embeds the Assisted Installer into a bootable ISO, enabling fully disconnected OpenShift deployments without requiring an external service.
 
+**Repositories:**
+- [openshift/installer](https://github.com/openshift/installer) - The `openshift-install agent` command
+- [openshift/assisted-service](https://github.com/openshift/assisted-service) - Embedded coordination service
+- [openshift/assisted-installer-agent](https://github.com/openshift/assisted-installer-agent) - Discovery agent
+
 ## Overview
 
 ```mermaid
@@ -53,22 +58,22 @@ graph TB
 
 | Scenario | Use ABI |
 |----------|---------|
-| Fully disconnected/air-gapped environment | ✅ |
-| No hub cluster available | ✅ |
-| Single cluster deployment | ✅ |
-| Automation pipelines | ✅ |
-| Pre-defined static configuration | ✅ |
-| Interactive installation | ❌ (use Assisted SaaS) |
-| Multi-cluster management | ❌ (use MCE) |
-| GitOps-driven deployment | ⚠️ (consider ZTP) |
+| Fully disconnected/air-gapped environment | Yes |
+| No hub cluster available | Yes |
+| Single cluster deployment | Yes |
+| Automation pipelines | Yes |
+| Pre-defined static configuration | Yes |
+| Interactive installation | No (use Assisted SaaS) |
+| Multi-cluster management | No (use MCE) |
+| GitOps-driven deployment | Partial (consider ZTP) |
 
 ## Key Differences from Other Methods
 
 | Aspect | IPI/UPI | Assisted SaaS | Assisted MCE | ABI |
 |--------|---------|---------------|--------------|-----|
-| External service | ❌ | ✅ (Red Hat) | ✅ (Hub) | ❌ (Embedded) |
-| Disconnected | ⚠️ | ❌ | ✅ | ✅ |
-| Pre-validation | ❌ | ✅ | ✅ | ✅ |
+| External service | No | Yes (Red Hat) | Yes (Hub) | No (Embedded) |
+| Disconnected | Partial | No | Yes | Yes |
+| Pre-validation | No | Yes | Yes | Yes |
 | Bootstrap node | Separate | None | None | None |
 | Configuration | install-config | Web UI/API | CRDs | YAML files |
 

@@ -19,45 +19,45 @@ This section documents the Custom Resource Definitions (CRDs) used in OpenShift 
 
 Primary CRDs used to define and install clusters:
 
-| CRD | API Group | Purpose |
-|-----|-----------|---------|
-| ClusterDeployment | hive.openshift.io | Cluster definition |
-| AgentClusterInstall | extensions.hive.openshift.io | Assisted install config |
-| InfraEnv | agent-install.openshift.io | Discovery environment |
-| Agent | agent-install.openshift.io | Discovered host |
-| ImageClusterInstall | extensions.hive.openshift.io | IBI cluster config |
-| HostedCluster | hypershift.openshift.io | HCP cluster |
-| NodePool | hypershift.openshift.io | HCP workers |
-| ClusterInstance | siteconfig.open-cluster-management.io | Unified ZTP |
+| CRD | API Group | Source |
+|-----|-----------|--------|
+| ClusterDeployment | hive.openshift.io | [clusterdeployment_types.go](https://github.com/openshift/hive/blob/master/apis/hive/v1/clusterdeployment_types.go) |
+| AgentClusterInstall | extensions.hive.openshift.io | [agentclusterinstall_types.go](https://github.com/openshift/assisted-service/blob/master/api/hiveextension/v1beta1/agentclusterinstall_types.go) |
+| InfraEnv | agent-install.openshift.io | [infraenv_types.go](https://github.com/openshift/assisted-service/blob/master/api/v1beta1/infraenv_types.go) |
+| Agent | agent-install.openshift.io | [agent_types.go](https://github.com/openshift/assisted-service/blob/master/api/v1beta1/agent_types.go) |
+| ImageClusterInstall | extensions.hive.openshift.io | [imageclusterinstall_types.go](https://github.com/openshift/image-based-install-operator/blob/main/api/v1alpha1/imageclusterinstall_types.go) |
+| HostedCluster | hypershift.openshift.io | [hostedcluster_types.go](https://github.com/openshift/hypershift/blob/main/api/hypershift/v1beta1/hostedcluster_types.go) |
+| NodePool | hypershift.openshift.io | [nodepool_types.go](https://github.com/openshift/hypershift/blob/main/api/hypershift/v1beta1/nodepool_types.go) |
+| ClusterInstance | siteconfig.open-cluster-management.io | [clusterinstance_types.go](https://github.com/stolostron/siteconfig/blob/main/api/v1alpha1/clusterinstance_types.go) |
 
 ### [Supporting CRDs](supporting-crds.md)
 
 CRDs that support the installation process:
 
-| CRD | API Group | Purpose |
-|-----|-----------|---------|
-| AgentServiceConfig | agent-install.openshift.io | Assisted service deployment |
-| NMStateConfig | agent-install.openshift.io | Static network config |
-| ClusterImageSet | hive.openshift.io | OCP version reference |
-| AgentClassification | agent-install.openshift.io | Host auto-labeling |
-| BareMetalHost | metal3.io | Physical host management |
-| PreprovisioningImage | metal3.io | BMO boot image |
-| ClusterPool | hive.openshift.io | Cluster pooling |
-| ClusterClaim | hive.openshift.io | Pool claiming |
-| MachinePool | hive.openshift.io | Worker scaling |
+| CRD | API Group | Source |
+|-----|-----------|--------|
+| AgentServiceConfig | agent-install.openshift.io | [agentserviceconfig_types.go](https://github.com/openshift/assisted-service/blob/master/api/v1beta1/agentserviceconfig_types.go) |
+| NMStateConfig | agent-install.openshift.io | [nmstate_config_types.go](https://github.com/openshift/assisted-service/blob/master/api/v1beta1/nmstate_config_types.go) |
+| ClusterImageSet | hive.openshift.io | [clusterimageset_types.go](https://github.com/openshift/hive/blob/master/apis/hive/v1/clusterimageset_types.go) |
+| AgentClassification | agent-install.openshift.io | [agentclassification_types.go](https://github.com/openshift/assisted-service/blob/master/api/v1beta1/agentclassification_types.go) |
+| BareMetalHost | metal3.io | [baremetalhost_types.go](https://github.com/metal3-io/baremetal-operator/blob/main/apis/metal3.io/v1alpha1/baremetalhost_types.go) |
+| PreprovisioningImage | metal3.io | [preprovisioningimage_types.go](https://github.com/metal3-io/baremetal-operator/blob/main/apis/metal3.io/v1alpha1/preprovisioningimage_types.go) |
+| ClusterPool | hive.openshift.io | [clusterpool_types.go](https://github.com/openshift/hive/blob/master/apis/hive/v1/clusterpool_types.go) |
+| ClusterClaim | hive.openshift.io | [clusterclaim_types.go](https://github.com/openshift/hive/blob/master/apis/hive/v1/clusterclaim_types.go) |
+| MachinePool | hive.openshift.io | [machinepool_types.go](https://github.com/openshift/hive/blob/master/apis/hive/v1/machinepool_types.go) |
 
 ### [Day 2 Machine Management](day2-machine-management.md)
 
 CRDs for post-install machine management:
 
-| CRD | API Group | Purpose |
-|-----|-----------|---------|
-| Machine | machine.openshift.io | Individual machine |
-| MachineSet | machine.openshift.io | Machine group |
-| MachineDeployment | machine.openshift.io | Rolling updates |
-| MachineHealthCheck | machine.openshift.io | Auto-repair |
-| MachineConfig | machineconfiguration.openshift.io | Node configuration |
-| MachineConfigPool | machineconfiguration.openshift.io | Config grouping |
+| CRD | API Group | Source |
+|-----|-----------|--------|
+| Machine | machine.openshift.io | [machine-api-operator/api](https://github.com/openshift/machine-api-operator/tree/master/pkg/apis/machine/v1beta1) |
+| MachineSet | machine.openshift.io | [machine-api-operator/api](https://github.com/openshift/machine-api-operator/tree/master/pkg/apis/machine/v1beta1) |
+| MachineDeployment | machine.openshift.io | [machine-api-operator/api](https://github.com/openshift/machine-api-operator/tree/master/pkg/apis/machine/v1beta1) |
+| MachineHealthCheck | machine.openshift.io | [machine-api-operator/api](https://github.com/openshift/machine-api-operator/tree/master/pkg/apis/machine/v1beta1) |
+| MachineConfig | machineconfiguration.openshift.io | [machineconfig_types.go](https://github.com/openshift/machine-config-operator/blob/master/pkg/apis/machineconfiguration.openshift.io/v1/types.go) |
+| MachineConfigPool | machineconfiguration.openshift.io | [machineconfigpool_types.go](https://github.com/openshift/machine-config-operator/blob/master/pkg/apis/machineconfiguration.openshift.io/v1/types.go) |
 
 ## CRD Relationship Diagram
 

@@ -41,20 +41,26 @@ sequenceDiagram
 
 | Platform | Full IPI Support | Notes |
 |----------|-----------------|-------|
-| AWS | ✅ | Primary development platform |
-| Azure | ✅ | Includes Azure Stack Hub |
-| GCP | ✅ | |
-| IBM Cloud | ✅ | VPC Gen2 |
-| Nutanix | ✅ | Requires Prism Central |
-| OpenStack | ✅ | Requires Octavia for LB |
-| vSphere | ✅ | Requires vCenter |
-| Bare Metal | ✅ | Uses Bare Metal IPI (Metal3/Ironic), separate from Assisted |
+| AWS | Yes | Primary development platform |
+| Azure | Yes | Includes Azure Stack Hub |
+| GCP | Yes | |
+| IBM Cloud | Yes | VPC Gen2 |
+| Nutanix | Yes | Requires Prism Central |
+| OpenStack | Yes | Requires Octavia for LB |
+| vSphere | Yes | Requires vCenter |
+| Bare Metal | Yes | Uses Bare Metal IPI (Metal3/Ironic), separate from Assisted |
 
 ## Key Components
 
 ### openshift-install Binary
 
 The `openshift-install` binary is the main entry point. It's built from the [openshift/installer](https://github.com/openshift/installer) repository.
+
+Key source code locations:
+- [cmd/openshift-install](https://github.com/openshift/installer/tree/master/cmd/openshift-install) - CLI entry point
+- [pkg/asset](https://github.com/openshift/installer/tree/master/pkg/asset) - Asset generation (install-config, manifests, ignition)
+- [pkg/tfvars](https://github.com/openshift/installer/tree/master/pkg/tfvars) - Terraform variable generation per platform
+- [data/data](https://github.com/openshift/installer/tree/master/data/data) - Embedded Terraform configurations
 
 ```bash
 # Check embedded release info
@@ -156,7 +162,7 @@ The release image is embedded in the `openshift-install` binary; the matching OS
 
 ### Ignition Configs
 
-Ignition is a first-boot provisioning system for CoreOS. The installer generates three Ignition configs:
+[Ignition](https://coreos.github.io/ignition/) is a first-boot provisioning system for CoreOS. The installer generates three Ignition configs:
 
 | File | Purpose | Used By |
 |------|---------|---------|
@@ -270,12 +276,12 @@ openshift-install create ignition-configs --dir=cluster
 
 After installation, cluster management shifts to:
 
-| Component | Purpose |
-|-----------|---------|
-| Machine API | Manages cloud VMs via Machine CRDs |
-| Cluster Autoscaler | Scales worker nodes |
-| Machine Config Operator | Manages node OS configuration |
-| Cluster Version Operator | Manages cluster upgrades |
+| Component | Repository | Purpose |
+|-----------|------------|---------|
+| Machine API | [openshift/machine-api-operator](https://github.com/openshift/machine-api-operator) | Manages cloud VMs via Machine CRDs |
+| Cluster Autoscaler | [openshift/cluster-autoscaler-operator](https://github.com/openshift/cluster-autoscaler-operator) | Scales worker nodes |
+| Machine Config Operator | [openshift/machine-config-operator](https://github.com/openshift/machine-config-operator) | Manages node OS configuration |
+| Cluster Version Operator | [openshift/cluster-version-operator](https://github.com/openshift/cluster-version-operator) | Manages cluster upgrades |
 
 ## Troubleshooting
 
@@ -305,6 +311,7 @@ openshift-install gather --dir=cluster
 
 ## Related Documentation
 
+- [Traditional Installers Overview](index.md) - Section overview
 - [UPI Installation](upi.md) - When you need to provision infrastructure yourself
 - [Bootstrap Process](bootstrap-process.md) - Detailed bootstrap mechanics
 - [Machine API](../08-crd-reference/day2-machine-management.md) - Post-install machine management

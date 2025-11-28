@@ -468,8 +468,9 @@ oc patch clusterdeployment my-cluster -n my-cluster \
 
 ## Related Documentation
 
-- [ZTP Overview](ztp.md)
-- [SiteConfig Operator](siteconfig.md)
+- [GitOps Provisioning Overview](index.md) - Section overview
+- [ZTP Overview](ztp.md) - Complete ZTP workflow
+- [SiteConfig Operator](siteconfig.md) - ClusterInstance rendering
 - [Assisted Installation](../03-assisted-installation/overview.md)
 - [CRD Reference](../08-crd-reference/installation-crds.md)
 

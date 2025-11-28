@@ -2,6 +2,13 @@
 
 The OpenShift Appliance is a pre-built disk image containing all OpenShift components and container images, enabling fully air-gapped installation without any network connectivity.
 
+**Repository:** [openshift/appliance](https://github.com/openshift/appliance)
+
+Key source files:
+- [ApplianceConfig](https://github.com/openshift/appliance/blob/main/pkg/asset/config/appliance_config.go) - Configuration schema
+- [Builder](https://github.com/openshift/appliance/tree/main/pkg/asset) - Asset generation
+- [Embedded registry](https://github.com/openshift/appliance/tree/main/pkg/registry) - Local image registry
+
 > **Maturity Note:** The OpenShift Appliance project has varying support levels across releases. Check the [openshift/appliance repository](https://github.com/openshift/appliance) and [official Red Hat documentation](https://docs.openshift.com/container-platform/latest/installing/installing_with_agent_based_installer/preparing-to-install-with-agent-based-installer.html) for current support status and any preview/tech preview designations for your target OCP version.
 
 ## Overview
@@ -64,12 +71,12 @@ graph TB
 
 | Scenario | Use Appliance |
 |----------|---------------|
-| Fully air-gapped (no network at all) | ✅ |
-| Standardized deployments | ✅ |
-| Edge locations with physical media | ✅ |
-| Portable OpenShift (USB/DVD) | ✅ |
-| Dynamic image updates needed | ❌ |
-| Different cluster configurations | ⚠️ (need multiple appliances) |
+| Fully air-gapped (no network at all) | Yes |
+| Standardized deployments | Yes |
+| Edge locations with physical media | Yes |
+| Portable OpenShift (USB/DVD) | Yes |
+| Dynamic image updates needed | No |
+| Different cluster configurations | Partial (need multiple appliances) |
 
 ## Key Differences
 
@@ -488,7 +495,8 @@ If installation fails due to missing images:
 
 ## Related Documentation
 
-- [Agent-Based Installer](../03-assisted-installation/abi.md)
-- [Image-Based Install](ibi.md)
+- [Image-Based Installation Overview](index.md) - Section overview
+- [Image-Based Install](ibi.md) - IBI for SNO fleet deployment
+- [Agent-Based Installer](../03-assisted-installation/abi.md) - Underlying technology
 - [Installation Methods Overview](../01-installation-methods-overview.md)
 

@@ -77,17 +77,31 @@ graph TB
 
 ### ArgoCD
 
+**Repository:** [argoproj/argo-cd](https://github.com/argoproj/argo-cd) | [Docs](https://argo-cd.readthedocs.io/)
+
 GitOps engine that synchronizes Git repository state to the hub cluster.
 
 ### SiteConfig Operator
 
+**Repository:** [stolostron/siteconfig](https://github.com/stolostron/siteconfig)
+
 Renders ClusterInstance CRs into underlying installation resources.
 
+Key source files:
+- [ClusterInstance CRD](https://github.com/stolostron/siteconfig/blob/main/api/v1alpha1/clusterinstance_types.go)
+- [ClusterInstance Controller](https://github.com/stolostron/siteconfig/tree/main/internal/controller)
+
 ### TALM (Topology Aware Lifecycle Manager)
+
+**Repository:** [openshift-kni/cluster-group-upgrades-operator](https://github.com/openshift-kni/cluster-group-upgrades-operator)
 
 Manages policy-based configuration and upgrades across clusters.
 
 ### ACM/MCE
+
+**Repositories:**
+- MCE: [stolostron/backplane-operator](https://github.com/stolostron/backplane-operator)
+- ACM docs: [stolostron/rhacm-docs](https://github.com/stolostron/rhacm-docs)
 
 Provides cluster lifecycle management, policy framework, and observability.
 
@@ -538,8 +552,9 @@ oc get policy -A
 
 ## Related Documentation
 
-- [SiteConfig Operator](siteconfig.md)
-- [ACM Integration](acm-integration.md)
+- [GitOps Provisioning Overview](index.md) - Section overview
+- [SiteConfig Operator](siteconfig.md) - ClusterInstance rendering
+- [ACM Integration](acm-integration.md) - Policy and multi-cluster management
 - [Assisted Installation](../03-assisted-installation/overview.md)
-- [Image-Based Installation](../04-image-based-installation/ibi.md)
+- [Image-Based Installation](../04-image-based-installation/index.md)
 

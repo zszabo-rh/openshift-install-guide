@@ -8,14 +8,13 @@ A comprehensive guide for developers navigating OpenShift cluster installation m
 |---------|-------------|
 | [**Key Concepts & Glossary**](00-concepts-glossary.md) | Essential terminology: hub/spoke, early/late binding, images, hyperscalers |
 | [Installation Methods Overview](01-installation-methods-overview.md) | Comparison matrix and decision tree for choosing the right installation method |
-| [Traditional Installers](02-traditional-installers/ipi.md) | IPI, UPI, and the bootstrap process |
+| [Traditional Installers](02-traditional-installers/index.md) | IPI, UPI, and the bootstrap process |
 | [Assisted Installation](03-assisted-installation/overview.md) | SaaS, on-premise, Agent-Based Installer |
-| [Image-Based Installation](04-image-based-installation/ibi.md) | IBI and Appliance approaches |
-| [Hosted Control Planes](05-hosted-control-planes/hcp-overview.md) | HyperShift and CAPI integration |
-| [GitOps Provisioning](06-gitops-provisioning/ztp.md) | ZTP, SiteConfig, ACM/MCE integration |
+| [Image-Based Installation](04-image-based-installation/index.md) | IBI and Appliance approaches |
+| [Hosted Control Planes](05-hosted-control-planes/index.md) | HyperShift and CAPI integration |
+| [GitOps Provisioning](06-gitops-provisioning/index.md) | ZTP, SiteConfig, ACM/MCE integration |
 | [Operators & Controllers](07-operators-controllers/overview.md) | Reference for all installation-related operators |
 | [CRD Reference](08-crd-reference/index.md) | Complete CRD documentation with examples |
-| [Diagrams](09-diagrams/component-diagrams.md) | Mermaid architecture diagrams |
 | [Resources](10-resources.md) | Links for further study |
 
 ## Key Concepts
@@ -44,7 +43,7 @@ OpenShift has multiple installation paths, each with its own acronyms. Here are 
 | **MCE** | Multicluster Engine | Core cluster lifecycle operator |
 | **SNO** | Single Node OpenShift | All-in-one cluster on a single node |
 
-> 📖 **See [Key Concepts & Glossary](00-concepts-glossary.md)** for detailed explanations of:
+> **See [Key Concepts & Glossary](00-concepts-glossary.md)** for detailed explanations of:
 > - Hub and Spoke architecture
 > - Early vs Late binding
 > - Declarative vs Imperative APIs
@@ -58,10 +57,10 @@ In Kubernetes terminology:
 - **Operator**: A deployment/pod that runs one or more controllers, often packaged via OLM
 - **Controller**: A reconciliation loop that watches CRDs and drives state toward desired spec
 
-For example, **assisted-service** is an operator that contains multiple controllers:
-- `InfraEnvReconciler` - watches InfraEnv CRs
-- `AgentReconciler` - watches Agent CRs
-- `ClusterDeploymentsReconciler` - watches ClusterDeployment CRs
+For example, [**assisted-service**](https://github.com/openshift/assisted-service) is an operator that contains multiple controllers:
+- [`InfraEnvReconciler`](https://github.com/openshift/assisted-service/blob/master/internal/controller/controllers/infraenv_controller.go) - watches InfraEnv CRs
+- [`AgentReconciler`](https://github.com/openshift/assisted-service/blob/master/internal/controller/controllers/agent_controller.go) - watches Agent CRs
+- [`ClusterDeploymentsReconciler`](https://github.com/openshift/assisted-service/blob/master/internal/controller/controllers/clusterdeployments_controller.go) - watches ClusterDeployment CRs
 - And several more...
 
 See [Operators & Controllers Reference](07-operators-controllers/overview.md) for details.
@@ -69,6 +68,15 @@ See [Operators & Controllers Reference](07-operators-controllers/overview.md) fo
 ### Operator Ecosystem
 
 Installation involves multiple cooperating operators:
+
+| Operator | Repository |
+|----------|------------|
+| MCE | [stolostron/backplane-operator](https://github.com/stolostron/backplane-operator) |
+| Hive | [openshift/hive](https://github.com/openshift/hive) |
+| Assisted Service | [openshift/assisted-service](https://github.com/openshift/assisted-service) |
+| Baremetal Operator | [metal3-io/baremetal-operator](https://github.com/metal3-io/baremetal-operator) |
+| HyperShift | [openshift/hypershift](https://github.com/openshift/hypershift) |
+| SiteConfig | [stolostron/siteconfig](https://github.com/stolostron/siteconfig) |
 
 ```mermaid
 graph LR

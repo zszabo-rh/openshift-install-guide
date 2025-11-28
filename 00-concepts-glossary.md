@@ -301,7 +301,7 @@ spec:
 
 #### ImageStreams
 
-**ImageStreams** are OpenShift-specific resources that provide:
+**ImageStreams** are OpenShift-specific resources (managed by the [image-registry operator](https://github.com/openshift/cluster-image-registry-operator)) that provide:
 - Abstraction over image locations
 - Automatic tracking of image updates
 - Internal registry integration
@@ -324,7 +324,7 @@ spec:
 
 #### Image Mirroring
 
-For disconnected installations, images must be mirrored to a local registry:
+For disconnected installations, images must be mirrored to a local registry using [`oc-mirror`](https://github.com/openshift/oc-mirror):
 
 ```mermaid
 graph LR

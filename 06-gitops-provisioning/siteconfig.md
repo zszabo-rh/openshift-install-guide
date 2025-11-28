@@ -522,7 +522,8 @@ oc apply --dry-run=server -f clusterinstance.yaml
 
 ## Related Documentation
 
-- [ZTP Overview](ztp.md)
-- [ACM Integration](acm-integration.md)
+- [GitOps Provisioning Overview](index.md) - Section overview
+- [ZTP Overview](ztp.md) - Complete ZTP workflow
+- [ACM Integration](acm-integration.md) - Policy framework
 - [CRD Reference](../08-crd-reference/installation-crds.md)
 

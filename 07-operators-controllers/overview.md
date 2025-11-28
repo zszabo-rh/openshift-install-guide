@@ -107,32 +107,32 @@ graph TB
 
 ### Cluster Lifecycle
 
-| Operator | Purpose | Key CRDs |
-|----------|---------|----------|
-| **MCE Operator** | Central lifecycle management | MultiClusterEngine |
-| **Hive Operator** | Cluster provisioning/deprovisioning | ClusterDeployment, ClusterPool |
+| Operator | Repository | Key CRDs |
+|----------|------------|----------|
+| **MCE Operator** | [stolostron/backplane-operator](https://github.com/stolostron/backplane-operator) | MultiClusterEngine |
+| **Hive Operator** | [openshift/hive](https://github.com/openshift/hive) | [ClusterDeployment](https://github.com/openshift/hive/blob/master/apis/hive/v1/clusterdeployment_types.go), ClusterPool |
 
 ### Installation Orchestration
 
-| Operator | Purpose | Key CRDs |
-|----------|---------|----------|
-| **Assisted Service** | Guided installation | AgentClusterInstall, InfraEnv, Agent |
-| **IBI Operator** | Image-based installation | ImageClusterInstall |
-| **HyperShift Operator** | Hosted control planes | HostedCluster, NodePool |
+| Operator | Repository | Key CRDs |
+|----------|------------|----------|
+| **Assisted Service** | [openshift/assisted-service](https://github.com/openshift/assisted-service) | [AgentClusterInstall](https://github.com/openshift/assisted-service/blob/master/api/hiveextension/v1beta1/agentclusterinstall_types.go), [InfraEnv](https://github.com/openshift/assisted-service/blob/master/api/v1beta1/infraenv_types.go), [Agent](https://github.com/openshift/assisted-service/blob/master/api/v1beta1/agent_types.go) |
+| **IBI Operator** | [openshift/image-based-install-operator](https://github.com/openshift/image-based-install-operator) | [ImageClusterInstall](https://github.com/openshift/image-based-install-operator/blob/main/api/v1alpha1/imageclusterinstall_types.go) |
+| **HyperShift Operator** | [openshift/hypershift](https://github.com/openshift/hypershift) | [HostedCluster](https://github.com/openshift/hypershift/blob/main/api/hypershift/v1beta1/hostedcluster_types.go), [NodePool](https://github.com/openshift/hypershift/blob/main/api/hypershift/v1beta1/nodepool_types.go) |
 
 ### Infrastructure Management
 
-| Operator | Purpose | Key CRDs |
-|----------|---------|----------|
-| **Baremetal Operator** | Bare metal host lifecycle | BareMetalHost, PreprovisioningImage |
-| **Cluster API** | Machine management | Machine, MachineSet, MachineDeployment |
+| Operator | Repository | Key CRDs |
+|----------|------------|----------|
+| **Baremetal Operator** | [metal3-io/baremetal-operator](https://github.com/metal3-io/baremetal-operator) | [BareMetalHost](https://github.com/metal3-io/baremetal-operator/blob/main/apis/metal3.io/v1alpha1/baremetalhost_types.go), PreprovisioningImage |
+| **Cluster API** | [kubernetes-sigs/cluster-api](https://github.com/kubernetes-sigs/cluster-api) | Machine, MachineSet, MachineDeployment |
 
 ### Configuration Management
 
-| Operator | Purpose | Key CRDs |
-|----------|---------|----------|
-| **SiteConfig Operator** | Template-based provisioning | ClusterInstance |
-| **Machine Config Operator** | Node OS configuration | MachineConfig, MachineConfigPool |
+| Operator | Repository | Key CRDs |
+|----------|------------|----------|
+| **SiteConfig Operator** | [stolostron/siteconfig](https://github.com/stolostron/siteconfig) | [ClusterInstance](https://github.com/stolostron/siteconfig/blob/main/api/v1alpha1/clusterinstance_types.go) |
+| **Machine Config Operator** | [openshift/machine-config-operator](https://github.com/openshift/machine-config-operator) | MachineConfig, MachineConfigPool |
 
 ## Controller Patterns
 
@@ -345,5 +345,4 @@ oc logs -n multicluster-engine -l app=hive
 
 - [Detailed Controller Reference](reference.md)
 - [CRD Reference](../08-crd-reference/index.md)
-- [Component Diagrams](../09-diagrams/component-diagrams.md)
 

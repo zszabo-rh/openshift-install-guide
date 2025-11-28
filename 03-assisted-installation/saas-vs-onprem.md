@@ -2,6 +2,10 @@
 
 The Assisted Installer can run in two modes: as a hosted SaaS service or deployed on your own infrastructure (on a [hub cluster](../00-concepts-glossary.md#hub-and-spoke-architecture)). This document compares the two approaches.
 
+**Key resources:**
+- SaaS: [console.redhat.com/openshift](https://console.redhat.com/openshift/assisted-installer/clusters)
+- On-Premise: [assisted-service operator](https://github.com/openshift/assisted-service) deployed via [MCE](https://github.com/stolostron/backplane-operator)
+
 ## Architecture Comparison
 
 ### SaaS Mode (console.redhat.com)
@@ -120,21 +124,21 @@ graph TB
 
 ### Use SaaS When:
 
-- ✅ Quick proof-of-concept or testing
-- ✅ Single cluster deployment
-- ✅ Internet connectivity is available
-- ✅ No existing hub cluster
-- ✅ Minimal infrastructure overhead desired
-- ✅ Red Hat managed service preferred
+- Quick proof-of-concept or testing
+- Single cluster deployment
+- Internet connectivity is available
+- No existing hub cluster
+- Minimal infrastructure overhead desired
+- Red Hat managed service preferred
 
 ### Use On-Premise When:
 
-- ✅ Disconnected or air-gapped environment
-- ✅ Managing multiple clusters
-- ✅ GitOps/automation workflows required
-- ✅ Integration with existing OpenShift hub
-- ✅ Custom certificates or proxy required
-- ✅ Data sovereignty requirements
+- Disconnected or air-gapped environment
+- Managing multiple clusters
+- GitOps/automation workflows required
+- Integration with existing OpenShift hub
+- Custom certificates or proxy required
+- Data sovereignty requirements
 
 ## On-Premise Deployment
 

@@ -128,21 +128,25 @@ sequenceDiagram
 
 ### assisted-service
 
+**Repository:** [openshift/assisted-service](https://github.com/openshift/assisted-service)
+
 The brain of the Assisted Installer. It provides:
 
-- **REST API** for cluster and host management
+- **REST API** for cluster and host management ([swagger.yaml](https://github.com/openshift/assisted-service/blob/master/swagger.yaml))
 - **State machines** for cluster and host lifecycle
 - **Validation engine** for pre-flight checks
 - **Ignition generation** using openshift-install
 - **Kubernetes controllers** (in on-premise mode)
 
 **Key packages:**
-- `internal/bminventory/` - Main API handlers
-- `internal/cluster/` - Cluster state machine
-- `internal/host/` - Host state machine
-- `internal/controller/` - Kubernetes controllers
+- [`internal/bminventory/`](https://github.com/openshift/assisted-service/tree/master/internal/bminventory) - Main API handlers
+- [`internal/cluster/`](https://github.com/openshift/assisted-service/tree/master/internal/cluster) - Cluster state machine
+- [`internal/host/`](https://github.com/openshift/assisted-service/tree/master/internal/host) - Host state machine
+- [`internal/controller/`](https://github.com/openshift/assisted-service/tree/master/internal/controller) - Kubernetes controllers
 
 ### assisted-image-service
+
+**Repository:** [openshift/assisted-image-service](https://github.com/openshift/assisted-image-service)
 
 Generates customized discovery ISOs:
 
@@ -152,6 +156,8 @@ Generates customized discovery ISOs:
 - Streams images directly (no storage needed)
 
 ### assisted-installer-agent
+
+**Repository:** [openshift/assisted-installer-agent](https://github.com/openshift/assisted-installer-agent)
 
 Runs on discovered hosts:
 
@@ -168,6 +174,8 @@ Runs on discovered hosts:
 - System vendor and product info
 
 ### assisted-controller
+
+**Repository:** [openshift/assisted-installer](https://github.com/openshift/assisted-installer) (contains assisted-installer-controller)
 
 A Kubernetes Job that runs post-installation:
 
@@ -465,21 +473,23 @@ spec:
 
 ### With Hive (On-Premise)
 
-The Assisted Service integrates with Hive for:
+The Assisted Service integrates with [Hive](https://github.com/openshift/hive) for:
 - ClusterDeployment as cluster definition
 - Automatic cluster import after installation
 - ClusterPool support
 
+See [Hive integration docs](https://github.com/openshift/assisted-service/tree/master/docs/hive-integration).
+
 ### With Baremetal Operator
 
-When BMO is present, the Baremetal Agent Controller (BMAC):
+When [BMO](https://github.com/metal3-io/baremetal-operator) is present, the [Baremetal Agent Controller (BMAC)](https://github.com/openshift/assisted-service/blob/master/internal/controller/controllers/bmh_agent_controller.go):
 - Syncs BareMetalHost with Agent CRs
 - Automates ISO attachment
 - Manages host power state
 
 ### With SiteConfig/ZTP
 
-SiteConfig renders Assisted CRDs for GitOps workflows:
+[SiteConfig](https://github.com/stolostron/siteconfig) renders Assisted CRDs for GitOps workflows:
 - ClusterInstance → ClusterDeployment + AgentClusterInstall + InfraEnv
 - Enables fleet-scale deployments
 

@@ -2,6 +2,11 @@
 
 The bootstrap process is fundamental to all OpenShift installations. This document explains how a cluster forms from nothing to a fully operational state.
 
+**Key source code:**
+- [openshift/installer/pkg/asset/ignition/bootstrap](https://github.com/openshift/installer/tree/master/pkg/asset/ignition/bootstrap) - Bootstrap Ignition generation
+- [openshift/machine-config-operator](https://github.com/openshift/machine-config-operator) - Machine Config Server and node configuration
+- [openshift/cluster-bootstrap](https://github.com/openshift/cluster-bootstrap) - Bootstrap rendering logic
+
 ## The Bootstrap Problem
 
 OpenShift has a unique challenge: every node needs configuration from the cluster it's joining, but the cluster doesn't exist yet. This creates a chicken-and-egg problem.
@@ -289,10 +294,10 @@ graph TD
 
 The bootstrap is complete when:
 
-1. ✅ etcd cluster has 3 healthy members (bootstrap removed)
-2. ✅ kube-apiserver is running on control plane nodes
-3. ✅ CVO has deployed critical operators
-4. ✅ `bootkube.service` exits successfully
+1. etcd cluster has 3 healthy members (bootstrap removed)
+2. kube-apiserver is running on control plane nodes
+3. CVO has deployed critical operators
+4. `bootkube.service` exits successfully
 
 ```bash
 # Check bootstrap completion
@@ -415,6 +420,7 @@ External → Load Balancer → Bootstrap/Masters
 
 ## Related Documentation
 
+- [Traditional Installers Overview](index.md) - Section overview
 - [IPI Installation](ipi.md) - Automated infrastructure
 - [UPI Installation](upi.md) - Manual infrastructure
 - [Assisted Installation](../03-assisted-installation/overview.md) - Bootstrap-less approach

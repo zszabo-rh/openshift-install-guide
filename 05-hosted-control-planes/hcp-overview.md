@@ -136,6 +136,8 @@ graph LR
 
 ### Control Plane Operator (CPO)
 
+**Source:** [control-plane-operator](https://github.com/openshift/hypershift/tree/main/control-plane-operator)
+
 Manages control plane components within each hosted control plane namespace:
 - Deploys and configures control plane pods
 - Handles upgrades and scaling
@@ -143,11 +145,11 @@ Manages control plane components within each hosted control plane namespace:
 
 ### Key CRDs
 
-| CRD | Purpose |
-|-----|---------|
-| `HostedCluster` | Defines a hosted cluster |
-| `NodePool` | Manages worker node groups |
-| `HostedControlPlane` | Internal: control plane state |
+| CRD | Source | Purpose |
+|-----|--------|---------|
+| `HostedCluster` | [hostedcluster_types.go](https://github.com/openshift/hypershift/blob/main/api/hypershift/v1beta1/hostedcluster_types.go) | Defines a hosted cluster |
+| `NodePool` | [nodepool_types.go](https://github.com/openshift/hypershift/blob/main/api/hypershift/v1beta1/nodepool_types.go) | Manages worker node groups |
+| `HostedControlPlane` | [hostedcontrolplane_types.go](https://github.com/openshift/hypershift/blob/main/api/hypershift/v1beta1/hostedcontrolplane_types.go) | Internal: control plane state |
 
 ## Supported Platforms
 
@@ -278,7 +280,7 @@ sequenceDiagram
     end
     
     box rgb(180,175,160) Infrastructure
-        participant CAPI as Cluster API
+        participant CAPI as Cluster API (CAPI)
         participant Workers
     end
     
@@ -490,7 +492,8 @@ hypershift destroy cluster aws --name my-cluster
 
 ## Related Documentation
 
-- [CAPI Integration](capi-integration.md)
+- [Hosted Control Planes Overview](index.md) - Section overview
+- [CAPI Integration](capi-integration.md) - Cluster API for worker management
 - [Operators & Controllers Reference](../07-operators-controllers/reference.md)
 - [CRD Reference](../08-crd-reference/installation-crds.md)
 

@@ -96,9 +96,9 @@ flowchart TD
 - Bootstrap node automatically created and destroyed
 
 **Components involved:**
-- `openshift-install` binary
+- [`openshift-install`](https://github.com/openshift/installer) binary
 - Cloud provider APIs
-- Ignition configs
+- [Ignition configs](https://coreos.github.io/ignition/)
 
 [Learn more →](02-traditional-installers/ipi.md)
 
@@ -120,9 +120,9 @@ flowchart TD
 - Required for some platforms (IBM Power, z/VM)
 
 **Components involved:**
-- `openshift-install` binary (for config generation)
+- [`openshift-install`](https://github.com/openshift/installer) binary (for config generation)
 - User's infrastructure automation
-- Ignition configs
+- [Ignition configs](https://coreos.github.io/ignition/)
 
 [Learn more →](02-traditional-installers/upi.md)
 
@@ -144,8 +144,8 @@ flowchart TD
 - No hub cluster required (uses Red Hat's hosted service)
 
 **Components involved:**
-- console.redhat.com (hosted assisted-service)
-- Discovery ISO with embedded agent
+- [console.redhat.com](https://console.redhat.com/openshift/assisted-installer/clusters) (hosted [assisted-service](https://github.com/openshift/assisted-service))
+- Discovery ISO with embedded [agent](https://github.com/openshift/assisted-installer-agent)
 - User's bare metal or VMs
 
 [Learn more →](03-assisted-installation/overview.md)
@@ -168,9 +168,9 @@ flowchart TD
 - Can work in disconnected environments
 
 **Components involved:**
-- MCE Operator
-- assisted-service (deployed by AgentServiceConfig)
-- Hive (ClusterDeployment)
+- [MCE Operator](https://github.com/stolostron/backplane-operator)
+- [assisted-service](https://github.com/openshift/assisted-service) (deployed by AgentServiceConfig)
+- [Hive](https://github.com/openshift/hive) (ClusterDeployment)
 - Infrastructure Operator (InfraEnv, Agent CRDs)
 
 [Learn more →](03-assisted-installation/saas-vs-onprem.md)
@@ -193,9 +193,9 @@ flowchart TD
 - Self-orchestrating installation
 
 **Components involved:**
-- `openshift-install agent create image` command
-- Embedded assisted-service in ISO
-- agent-config.yaml, install-config.yaml
+- [`openshift-install agent create image`](https://github.com/openshift/installer/tree/master/cmd/openshift-install) command
+- Embedded [assisted-service](https://github.com/openshift/assisted-service) in ISO
+- [agent-config.yaml](https://github.com/openshift/installer/blob/master/pkg/asset/agent/agentconfig/agent_config.go), install-config.yaml
 
 [Learn more →](03-assisted-installation/abi.md)
 
@@ -217,9 +217,9 @@ flowchart TD
 - Integrates with Lifecycle Agent (LCA)
 
 **Components involved:**
-- image-based-install-operator
-- ImageClusterInstall CRD
-- Lifecycle Agent (on seed cluster)
+- [image-based-install-operator](https://github.com/openshift/image-based-install-operator)
+- [ImageClusterInstall CRD](https://github.com/openshift/image-based-install-operator/blob/main/api/v1alpha1/imageclusterinstall_types.go)
+- [Lifecycle Agent](https://github.com/openshift/lifecycle-agent) (on seed cluster)
 - Seed image with pre-installed OpenShift
 
 [Learn more →](04-image-based-installation/ibi.md)
@@ -242,8 +242,8 @@ flowchart TD
 - No network access required during install
 
 **Components involved:**
-- `openshift-appliance` tool
-- ApplianceConfig
+- [`openshift-appliance`](https://github.com/openshift/appliance) tool
+- [ApplianceConfig](https://github.com/openshift/appliance/blob/main/pkg/asset/config/appliance_config.go)
 - Embedded registry with all images
 
 [Learn more →](04-image-based-installation/appliance.md)
@@ -267,9 +267,9 @@ flowchart TD
 - Better resource utilization
 
 **Components involved:**
-- HyperShift Operator
-- HostedCluster, NodePool CRDs
-- Cluster API providers
+- [HyperShift Operator](https://github.com/openshift/hypershift)
+- [HostedCluster](https://github.com/openshift/hypershift/blob/main/api/hypershift/v1beta1/hostedcluster_types.go), [NodePool](https://github.com/openshift/hypershift/blob/main/api/hypershift/v1beta1/nodepool_types.go) CRDs
+- [Cluster API](https://cluster-api.sigs.k8s.io/) providers
 - Control plane pods (kube-apiserver, etcd, etc.)
 
 [Learn more →](05-hosted-control-planes/hcp-overview.md)
@@ -293,9 +293,9 @@ flowchart TD
 - ClusterInstance as unified API
 
 **Components involved:**
-- ArgoCD
-- SiteConfig Operator
-- ClusterInstance CRD
+- [ArgoCD](https://argo-cd.readthedocs.io/)
+- [SiteConfig Operator](https://github.com/stolostron/siteconfig)
+- [ClusterInstance CRD](https://github.com/stolostron/siteconfig/blob/main/api/v1alpha1/clusterinstance_types.go)
 - Underlying installation method (Assisted or IBI)
 
 [Learn more →](06-gitops-provisioning/ztp.md)
@@ -400,7 +400,10 @@ graph TB
 
 ## Next Steps
 
-- [Traditional Installers (IPI/UPI)](02-traditional-installers/ipi.md) - Deep dive into bootstrap process
+- [Traditional Installers (IPI/UPI)](02-traditional-installers/index.md) - Deep dive into bootstrap process
 - [Assisted Installation](03-assisted-installation/overview.md) - Detailed component architecture
+- [Image-Based Installation](04-image-based-installation/index.md) - IBI and Appliance approaches
+- [Hosted Control Planes](05-hosted-control-planes/index.md) - HyperShift and CAPI
+- [GitOps Provisioning](06-gitops-provisioning/index.md) - ZTP and SiteConfig
 - [Operators & Controllers Reference](07-operators-controllers/overview.md) - Understanding the operator ecosystem
 

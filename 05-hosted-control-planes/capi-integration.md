@@ -418,7 +418,8 @@ spec:
 
 ## Related Documentation
 
-- [HCP Overview](hcp-overview.md)
+- [Hosted Control Planes Overview](index.md) - Section overview
+- [HCP Overview](hcp-overview.md) - Architecture and concepts
 - [Assisted Installation](../03-assisted-installation/overview.md) - Agent provider uses Assisted
 - [Operators & Controllers Reference](../07-operators-controllers/reference.md)
 

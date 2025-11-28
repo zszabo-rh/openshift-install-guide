@@ -40,12 +40,12 @@ sequenceDiagram
 
 | Scenario | Use UPI |
 |----------|---------|
-| Restricted cloud permissions | ✅ |
-| Existing infrastructure automation | ✅ |
-| Custom networking requirements | ✅ |
-| Platform not fully IPI-supported | ✅ |
-| Air-gapped installation | ✅ |
-| IBM Power, z/VM | ✅ (required) |
+| Restricted cloud permissions | Yes |
+| Existing infrastructure automation | Yes |
+| Custom networking requirements | Yes |
+| Platform not fully IPI-supported | Yes |
+| Air-gapped installation | Yes |
+| IBM Power, z/VM | Yes (required) |
 
 ## Infrastructure Requirements
 
@@ -338,6 +338,7 @@ oc extract -n openshift-machine-api secret/worker-user-data --keys=userData --to
 
 ## Related Documentation
 
+- [Traditional Installers Overview](index.md) - Section overview
 - [IPI Installation](ipi.md) - Automated installation
 - [Bootstrap Process](bootstrap-process.md) - Understanding bootstrap
 - [Agent-Based Installer](../03-assisted-installation/abi.md) - Alternative for disconnected
