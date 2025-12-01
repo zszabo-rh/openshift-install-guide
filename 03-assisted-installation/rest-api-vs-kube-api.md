@@ -17,7 +17,7 @@ Before diving into the specifics, it's important to understand the fundamental d
 
 **Imperative** requires you to issue commands in sequence and handle state transitions yourself. **Declarative** lets you define desired state, and controllers continuously reconcile actual state toward it.
 
-See [Key Concepts & Glossary](../00-concepts-glossary.md#declarative-vs-imperative-apis) for detailed comparison.
+See [Getting Started](../00-getting-started.md#api-types-rest-vs-kubernetes) for background on API styles.
 
 ## Overview
 
@@ -508,7 +508,7 @@ spec:
 | **Use case** | Known clusters, known hosts | Dynamic assignment, large fleets |
 | **ZTP pattern** | Per-site InfraEnv | Central pool + AgentClassification |
 
-See [Key Concepts & Glossary](../00-concepts-glossary.md#early-binding-vs-late-binding) for more details.
+See [SaaS vs On-Premise](saas-vs-onprem.md#early-vs-late-binding) for more details.
 
 ## API Parity
 
@@ -529,6 +529,16 @@ Not all REST API features have CRD equivalents and vice versa:
 | BMO integration | No | Yes |
 
 ## Related Documentation
+
+### Detailed Documentation
+
+- [REST API Getting Started](https://github.com/openshift/assisted-service/blob/master/docs/user-guide/rest-api-getting-started.md) - Complete REST API tutorial
+- [REST API v1→v2 Transition Guide](https://github.com/openshift/assisted-service/blob/master/docs/user-guide/rest-api-v1-v2-transition-guide.md)
+- [Kube-API Getting Started](https://github.com/openshift/assisted-service/blob/master/docs/hive-integration/kube-api-getting-started.md) - Complete CRD tutorial
+- [Kube-API Conditions](https://github.com/openshift/assisted-service/blob/master/docs/hive-integration/kube-api-conditions.md) - Status conditions reference
+- [Swagger/OpenAPI Spec](https://github.com/openshift/assisted-service/blob/master/swagger.yaml) - Full REST API schema
+
+### This Guide
 
 - [Assisted Installation Overview](overview.md)
 - [SaaS vs On-Premise](saas-vs-onprem.md)

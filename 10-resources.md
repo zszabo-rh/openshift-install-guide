@@ -66,6 +66,40 @@ A curated collection of documentation, repositories, and learning resources for 
 | [openshift-kni/cnf-features-deploy](https://github.com/openshift-kni/cnf-features-deploy) | ZTP reference implementation |
 | [stolostron/siteconfig](https://github.com/stolostron/siteconfig) | SiteConfig operator |
 
+## Assisted Service Documentation
+
+The [assisted-service repository](https://github.com/openshift/assisted-service/tree/master/docs) contains extensive documentation:
+
+### User Guides
+
+| Document | Description |
+|----------|-------------|
+| [User Guide Index](https://github.com/openshift/assisted-service/tree/master/docs/user-guide) | Comprehensive user documentation |
+| [REST API Getting Started](https://github.com/openshift/assisted-service/blob/master/docs/user-guide/rest-api-getting-started.md) | Step-by-step REST API tutorial |
+| [Network Configuration](https://github.com/openshift/assisted-service/tree/master/docs/user-guide/network-configuration) | Static IP, dual-stack, troubleshooting |
+| [Mirror Registry Guide](https://github.com/openshift/assisted-service/blob/master/docs/user-guide/mirror_registry_guide.md) | Disconnected installation setup |
+| [Day-2 Operations](https://github.com/openshift/assisted-service/blob/master/docs/user-guide/rest-api-day2.md) | Adding workers to existing clusters |
+
+### Kubernetes API / Hive Integration
+
+| Document | Description |
+|----------|-------------|
+| [Hive Integration README](https://github.com/openshift/assisted-service/blob/master/docs/hive-integration/README.md) | CRD overview and examples |
+| [Kube-API Getting Started](https://github.com/openshift/assisted-service/blob/master/docs/hive-integration/kube-api-getting-started.md) | Step-by-step CRD tutorial |
+| [Late Binding](https://github.com/openshift/assisted-service/blob/master/docs/hive-integration/late-binding.md) | Host pool and dynamic assignment |
+| [BMAC Controller](https://github.com/openshift/assisted-service/blob/master/docs/hive-integration/baremetal-agent-controller.md) | BareMetalHost integration |
+| [Kube-API Conditions](https://github.com/openshift/assisted-service/blob/master/docs/hive-integration/kube-api-conditions.md) | Status conditions reference |
+| [CRD Examples](https://github.com/openshift/assisted-service/tree/master/docs/hive-integration/crds) | YAML examples for all CRDs |
+
+### Developer Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Architecture](https://github.com/openshift/assisted-service/blob/master/docs/architecture.md) | Service architecture overview |
+| [Developer README](https://github.com/openshift/assisted-service/blob/master/docs/dev/README.md) | Local development setup |
+| [Testing Guide](https://github.com/openshift/assisted-service/blob/master/docs/dev/testing.md) | Running tests |
+| [Enhancement Proposals](https://github.com/openshift/assisted-service/tree/master/docs/enhancements) | Feature design documents |
+
 ## API References
 
 ### Swagger/OpenAPI

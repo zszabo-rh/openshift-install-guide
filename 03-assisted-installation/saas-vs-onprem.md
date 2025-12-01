@@ -1,6 +1,6 @@
 # SaaS vs On-Premise Assisted Installation
 
-The Assisted Installer can run in two modes: as a hosted SaaS service or deployed on your own infrastructure (on a [hub cluster](../00-concepts-glossary.md#hub-and-spoke-architecture)). This document compares the two approaches.
+The Assisted Installer can run in two modes: as a hosted SaaS service or deployed on your own infrastructure (on a hub cluster). This document compares the two approaches.
 
 **Key resources:**
 - SaaS: [console.redhat.com/openshift](https://console.redhat.com/openshift/assisted-installer/clusters)
@@ -103,6 +103,64 @@ graph TB
     
     linkStyle default stroke:#2d3748,stroke-width:2px
 ```
+
+## Hub and Spoke Architecture
+
+On-premise Assisted Installer uses a **hub-and-spoke** model:
+
+| Term | Definition |
+|------|------------|
+| **Hub Cluster** | The central OpenShift cluster running MCE/ACM. Hosts the Assisted Service and manages spoke clusters. |
+| **Spoke Cluster** | A cluster provisioned by the hub. Also called "managed cluster." |
+
+The hub runs lifecycle operators (MCE, Hive, Assisted Service) that provision spoke clusters. Once installed, spokes can operate independently but remain connected for management, policies, and upgrades.
+
+## Early vs Late Binding
+
+When using on-premise Assisted Installer, you can choose **when hosts are assigned to clusters**:
+
+| Binding Type | When Hosts Bind | Use Case |
+|--------------|-----------------|----------|
+| **Early Binding** | At discovery time | Known cluster with known hosts |
+| **Late Binding** | After discovery | Shared host pool, dynamic assignment |
+
+**Early Binding** - InfraEnv references a specific cluster:
+```yaml
+apiVersion: agent-install.openshift.io/v1beta1
+kind: InfraEnv
+metadata:
+  name: my-cluster-infraenv
+spec:
+  clusterRef:           # Hosts auto-bind to this cluster
+    name: my-cluster
+    namespace: my-cluster
+```
+
+**Late Binding** - InfraEnv creates a shared host pool:
+```yaml
+apiVersion: agent-install.openshift.io/v1beta1
+kind: InfraEnv
+metadata:
+  name: shared-discovery
+spec:
+  # No clusterRef - hosts go to a pool
+  pullSecretRef:
+    name: pull-secret
+---
+# Later, manually bind an agent to a cluster
+apiVersion: agent-install.openshift.io/v1beta1
+kind: Agent
+metadata:
+  name: discovered-host-uuid
+spec:
+  clusterDeploymentName:    # Manual assignment
+    name: target-cluster
+    namespace: target-cluster
+```
+
+**When to use each:**
+- **Early binding**: You know exactly which hosts go to which cluster. Simpler workflow.
+- **Late binding**: Pool of hosts assigned dynamically based on availability. Common in large ZTP deployments.
 
 ## Feature Comparison
 
@@ -448,6 +506,16 @@ graph LR
 3. (Cannot migrate installed clusters)
 
 ## Related Documentation
+
+### Detailed Documentation
+
+- [Hive Integration Guide](https://github.com/openshift/assisted-service/blob/master/docs/hive-integration/README.md) - Complete CRD reference and examples
+- [Kube-API Getting Started](https://github.com/openshift/assisted-service/blob/master/docs/hive-integration/kube-api-getting-started.md) - Step-by-step on-premise setup
+- [Late Binding](https://github.com/openshift/assisted-service/blob/master/docs/hive-integration/late-binding.md) - Detailed late binding guide
+- [Mirror Registry Guide](https://github.com/openshift/assisted-service/blob/master/docs/user-guide/mirror_registry_guide.md) - Disconnected setup
+- [Operator Deployment](https://github.com/openshift/assisted-service/blob/master/docs/operator.md) - MCE operator details
+
+### This Guide
 
 - [Assisted Installation Overview](overview.md)
 - [REST API vs Kubernetes API](rest-api-vs-kube-api.md)

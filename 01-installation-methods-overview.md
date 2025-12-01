@@ -85,7 +85,7 @@ flowchart TD
 **What it is:** The `openshift-install` binary provisions all infrastructure (VMs, networking, storage) automatically on supported cloud platforms.
 
 **Best for:**
-- [Hyperscaler](00-concepts-glossary.md#hyperscalers) deployments (AWS, Azure, GCP, IBM Cloud)
+- Hyperscaler deployments (AWS, Azure, GCP, IBM Cloud)
 - Teams that want minimal infrastructure management
 - Development and testing environments
 
@@ -361,7 +361,7 @@ graph TB
     linkStyle 7 stroke:#8a2a3a,stroke-width:3px
 ```
 
-> **Note:** The assisted-service internally uses the `openshift-install` binary to generate Ignition configs. This is an implementation detail—users interact only with the Assisted APIs or CRDs.
+> **Note:** The assisted-service internally uses the `openshift-install` binary to generate Ignition configs. This is an implementation detail; users interact only with the Assisted APIs or CRDs.
 
 ## Choosing Based on Requirements
 
@@ -393,10 +393,22 @@ graph TB
 
 | Infrastructure | Recommended Methods |
 |----------------|---------------------|
-| [Hyperscalers](00-concepts-glossary.md#hyperscalers) (AWS, Azure, GCP) | IPI, HCP |
+| Hyperscalers (AWS, Azure, GCP) | IPI, HCP |
 | VMware vSphere | IPI, Assisted, ABI |
 | Bare metal | Assisted, ABI, ZTP |
 | Edge/Telco | IBI, ZTP |
+
+## Official Documentation
+
+For each installation method, refer to the detailed documentation in the respective repositories:
+
+| Method | Primary Documentation |
+|--------|----------------------|
+| IPI/UPI | [openshift/installer docs](https://github.com/openshift/installer/tree/master/docs/user) |
+| Assisted | [assisted-service docs](https://github.com/openshift/assisted-service/tree/master/docs) |
+| ABI | [installer/docs/user/agent](https://github.com/openshift/installer/tree/master/docs/user/agent) |
+| HCP | [hypershift docs](https://hypershift-docs.netlify.app/) |
+| ZTP | [cnf-features-deploy/ztp](https://github.com/openshift-kni/cnf-features-deploy/tree/master/ztp) |
 
 ## Next Steps
 

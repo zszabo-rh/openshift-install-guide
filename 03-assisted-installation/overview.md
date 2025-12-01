@@ -493,7 +493,22 @@ When [BMO](https://github.com/metal3-io/baremetal-operator) is present, the [Bar
 - ClusterInstance → ClusterDeployment + AgentClusterInstall + InfraEnv
 - Enables fleet-scale deployments
 
-## Next Steps
+## Further Reading
+
+### Detailed Documentation
+
+The [assisted-service repository](https://github.com/openshift/assisted-service/tree/master/docs) contains comprehensive documentation:
+
+| Topic | Link |
+|-------|------|
+| **Architecture overview** | [docs/architecture.md](https://github.com/openshift/assisted-service/blob/master/docs/architecture.md) |
+| **User guide** | [docs/user-guide/](https://github.com/openshift/assisted-service/tree/master/docs/user-guide) |
+| **Hive/Kube-API integration** | [docs/hive-integration/](https://github.com/openshift/assisted-service/tree/master/docs/hive-integration) |
+| **Network configuration** | [docs/user-guide/network-configuration/](https://github.com/openshift/assisted-service/tree/master/docs/user-guide/network-configuration) |
+| **Developer documentation** | [docs/dev/](https://github.com/openshift/assisted-service/tree/master/docs/dev) |
+| **Enhancement proposals** | [docs/enhancements/](https://github.com/openshift/assisted-service/tree/master/docs/enhancements) |
+
+### Next Steps in This Guide
 
 - [SaaS vs On-Premise comparison](saas-vs-onprem.md)
 - [REST API vs Kubernetes API](rest-api-vs-kube-api.md)

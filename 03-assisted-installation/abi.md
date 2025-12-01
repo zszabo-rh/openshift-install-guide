@@ -268,7 +268,7 @@ graph TB
     linkStyle default stroke:#2d3748,stroke-width:2px
 ```
 
-> **Implementation Note:** The embedded service is based on assisted-service running in a lightweight mode with local state storage. This is an implementation detail—the user experience is through the generated ISO and `openshift-install agent` commands.
+> **Implementation Note:** The embedded service is based on assisted-service running in a lightweight mode with local state storage. This is an implementation detail; the user experience is through the generated ISO and `openshift-install agent` commands.
 
 ### Rendezvous Host
 
@@ -491,6 +491,14 @@ openshift-install agent gather --dir=.
 | Use case | Normal disconnected | Fully air-gapped |
 
 ## Related Documentation
+
+### Detailed Documentation
+
+- [Agent-Based Installer](https://github.com/openshift/assisted-service/blob/master/docs/agent-based-installer.md) - Technical details
+- [Static Network Configuration](https://github.com/openshift/assisted-service/blob/master/docs/user-guide/network-configuration/static-configuration.md)
+- [OpenShift Installer ABI Docs](https://github.com/openshift/installer/tree/master/docs/user/agent) - Official installer documentation
+
+### This Guide
 
 - [Assisted Installation Overview](overview.md)
 - [Image-Based Installation](../04-image-based-installation/ibi.md)

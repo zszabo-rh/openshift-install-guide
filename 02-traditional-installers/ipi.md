@@ -151,7 +151,7 @@ sshKey: '<ssh_public_key>'
 
 ### Release and OS Images
 
-The installer uses two key images (see [Images and Versioning](../00-concepts-glossary.md#images-and-versioning)):
+The installer uses two key images (see [Getting Started](../00-getting-started.md#release-and-os-images)):
 
 | Image Type | Purpose | Example |
 |------------|---------|---------|

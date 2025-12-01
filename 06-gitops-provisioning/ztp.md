@@ -2,7 +2,7 @@
 
 Zero Touch Provisioning (ZTP) is a GitOps-driven approach to deploying OpenShift clusters at scale, particularly suited for edge and telco deployments.
 
-ZTP uses a [hub-and-spoke architecture](../00-concepts-glossary.md#hub-and-spoke-architecture) where a central **hub cluster** manages the provisioning of many **spoke clusters** (edge sites) through GitOps workflows.
+ZTP uses a [hub-and-spoke architecture](../03-assisted-installation/saas-vs-onprem.md#hub-and-spoke-architecture) where a central **hub cluster** manages the provisioning of many **spoke clusters** (edge sites) through GitOps workflows.
 
 ## Overview
 
@@ -551,6 +551,15 @@ oc get policy -A
 ```
 
 ## Related Documentation
+
+### Detailed Documentation
+
+- [ZTP Flow Diagrams](https://github.com/openshift/assisted-service/tree/master/docs/hive-integration) - `ZTP_flow.png`, `ZTP_converged_flow.png`
+- [cnf-features-deploy](https://github.com/openshift-kni/cnf-features-deploy/tree/master/ztp) - ZTP reference implementation
+- [SiteConfig Operator](https://github.com/stolostron/siteconfig) - ClusterInstance CRD source
+- [RHACM ZTP Docs](https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes) - Official ZTP documentation
+
+### This Guide
 
 - [GitOps Provisioning Overview](index.md) - Section overview
 - [SiteConfig Operator](siteconfig.md) - ClusterInstance rendering

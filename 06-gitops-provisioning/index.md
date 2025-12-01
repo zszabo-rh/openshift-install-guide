@@ -139,6 +139,6 @@ The SiteConfig Operator renders this into:
 - [Assisted Installation](../03-assisted-installation/overview.md) - Underlying installation method
 - [Image-Based Install](../04-image-based-installation/ibi.md) - Alternative backend for ZTP
 - [CRD Reference](../08-crd-reference/index.md) - ClusterInstance and related CRDs
-- [Key Concepts: Hub and Spoke](../00-concepts-glossary.md#hub-and-spoke-architecture) - Architecture pattern
+- [Hub and Spoke Architecture](../03-assisted-installation/saas-vs-onprem.md#hub-and-spoke-architecture) - Architecture pattern
 
 

@@ -522,6 +522,13 @@ oc apply --dry-run=server -f clusterinstance.yaml
 
 ## Related Documentation
 
+### Detailed Documentation
+
+- [SiteConfig Repository](https://github.com/stolostron/siteconfig) - ClusterInstance CRD and controller source
+- [SiteConfig CRD Types](https://github.com/stolostron/siteconfig/tree/main/api/v1alpha1) - Go type definitions
+
+### This Guide
+
 - [GitOps Provisioning Overview](index.md) - Section overview
 - [ZTP Overview](ztp.md) - Complete ZTP workflow
 - [ACM Integration](acm-integration.md) - Policy framework

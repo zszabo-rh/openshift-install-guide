@@ -492,6 +492,15 @@ hypershift destroy cluster aws --name my-cluster
 
 ## Related Documentation
 
+### Detailed Documentation
+
+- [HyperShift Documentation](https://hypershift-docs.netlify.app/) - Official HyperShift project docs
+- [HyperShift Repository](https://github.com/openshift/hypershift) - Source code and examples
+- [Agent HyperShift Config](https://github.com/openshift/assisted-service/blob/master/docs/user-guide/hypershift-agent-service-config.md) - Assisted integration with HyperShift
+- [OpenShift HCP Docs](https://docs.openshift.com/container-platform/latest/hosted_control_planes/index.html) - Official product documentation
+
+### This Guide
+
 - [Hosted Control Planes Overview](index.md) - Section overview
 - [CAPI Integration](capi-integration.md) - Cluster API for worker management
 - [Operators & Controllers Reference](../07-operators-controllers/reference.md)

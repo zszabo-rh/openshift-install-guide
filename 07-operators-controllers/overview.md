@@ -343,6 +343,14 @@ oc logs -n multicluster-engine -l app=hive
 
 ## Related Documentation
 
+### Detailed Documentation
+
+- [BMAC Controller](https://github.com/openshift/assisted-service/blob/master/docs/hive-integration/baremetal-agent-controller.md) - BareMetalHost integration details
+- [Assisted Service Architecture](https://github.com/openshift/assisted-service/blob/master/docs/architecture.md) - Service design overview
+- [Controller Source Code](https://github.com/openshift/assisted-service/tree/master/internal/controller/controllers) - Implementation details
+
+### This Guide
+
 - [Detailed Controller Reference](reference.md)
 - [CRD Reference](../08-crd-reference/index.md)
 

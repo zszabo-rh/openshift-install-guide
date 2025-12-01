@@ -470,6 +470,16 @@ graph TB
 
 ## Related Documentation
 
+### Detailed Documentation
+
+- [Architecture Overview](https://github.com/openshift/assisted-service/blob/master/docs/architecture.md) - Detailed service architecture
+- [Hardware Requirements](https://github.com/openshift/assisted-service/blob/master/docs/dev/hardware-requirements.md) - Minimum hardware specs
+- [Events Reference](https://github.com/openshift/assisted-service/blob/master/docs/events.md) - Event types and descriptions
+- [Operator Deployment](https://github.com/openshift/assisted-service/blob/master/docs/operator.md) - MCE operator installation
+- [Assisted Service on OpenShift](https://github.com/openshift/assisted-service/blob/master/docs/user-guide/assisted-service-on-openshift.md) - Deployment guide
+
+### This Guide
+
 - [Assisted Installation Overview](overview.md)
 - [Operators & Controllers Reference](../07-operators-controllers/reference.md)
 - [CRD Reference](../08-crd-reference/index.md)

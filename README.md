@@ -1,135 +1,51 @@
 # OpenShift Installation Guide
 
-A comprehensive guide for developers navigating OpenShift cluster installation methods, operators, controllers, and Custom Resources.
+A developer-focused guide to OpenShift cluster installation methods, with emphasis on the [Assisted Installer](https://github.com/openshift/assisted-service) and related components.
 
-## Quick Navigation
+## What This Guide Covers
 
-| Section | Description |
-|---------|-------------|
-| [**Key Concepts & Glossary**](00-concepts-glossary.md) | Essential terminology: hub/spoke, early/late binding, images, hyperscalers |
-| [Installation Methods Overview](01-installation-methods-overview.md) | Comparison matrix and decision tree for choosing the right installation method |
-| [Traditional Installers](02-traditional-installers/index.md) | IPI, UPI, and the bootstrap process |
-| [Assisted Installation](03-assisted-installation/overview.md) | SaaS, on-premise, Agent-Based Installer |
-| [Image-Based Installation](04-image-based-installation/index.md) | IBI and Appliance approaches |
-| [Hosted Control Planes](05-hosted-control-planes/index.md) | HyperShift and CAPI integration |
-| [GitOps Provisioning](06-gitops-provisioning/index.md) | ZTP, SiteConfig, ACM/MCE integration |
-| [Operators & Controllers](07-operators-controllers/overview.md) | Reference for all installation-related operators |
-| [CRD Reference](08-crd-reference/index.md) | Complete CRD documentation with examples |
-| [Resources](10-resources.md) | Links for further study |
+This guide explains:
+- **How** OpenShift clusters are installed
+- **Which method** to choose for your scenario
+- **What components** are involved (operators, controllers, CRDs)
+- **Where** to find source code and APIs
 
-## Key Concepts
+## How to Use This Guide
 
-### What is OpenShift Installation?
+| If you want to... | Start here |
+|-------------------|------------|
+| Learn the basics first | [Getting Started](00-getting-started.md) |
+| Choose an installation method | [Installation Methods Overview](01-installation-methods-overview.md) |
+| Install on a cloud provider | [Traditional Installers](02-traditional-installers/index.md) |
+| Use the Assisted Installer | [Assisted Installation](03-assisted-installation/overview.md) |
+| Deploy in disconnected environments | [Agent-Based Installer](03-assisted-installation/abi.md) |
+| Deploy SNO quickly | [Image-Based Installation](04-image-based-installation/index.md) |
+| Run control planes as pods | [Hosted Control Planes](05-hosted-control-planes/index.md) |
+| Deploy at scale with GitOps | [GitOps Provisioning](06-gitops-provisioning/index.md) |
+| Understand the operator ecosystem | [Operators & Controllers](07-operators-controllers/overview.md) |
+| Look up CRD specifications | [CRD Reference](08-crd-reference/index.md) |
+| Find external resources | [Resources](10-resources.md) |
+| Look up an abbreviation | [Glossary](11-glossary.md) |
 
-OpenShift installation involves:
-1. **Provisioning infrastructure** (VMs, bare metal, cloud resources)
-2. **Bootstrapping** a temporary control plane
-3. **Installing** the permanent control plane and workers
-4. **Configuring** the cluster with operators and day-2 settings
+## Relationship to Repository Documentation
 
-### Glossary: The "Alphabet Soup"
+This guide provides a **conceptual overview** and **cross-references** to help navigate the extensive documentation in the assisted-service and related repositories. It is not intended to duplicate detailed guides that already exist.
 
-OpenShift has multiple installation paths, each with its own acronyms. Here are the most common:
+For in-depth information, refer to:
+- [assisted-service/docs](https://github.com/openshift/assisted-service/tree/master/docs) - Comprehensive Assisted Installer documentation
+- [assisted-service/docs/user-guide](https://github.com/openshift/assisted-service/tree/master/docs/user-guide) - Step-by-step tutorials
+- [assisted-service/docs/hive-integration](https://github.com/openshift/assisted-service/tree/master/docs/hive-integration) - Kubernetes CRD documentation
+- [assisted-service/docs/dev](https://github.com/openshift/assisted-service/tree/master/docs/dev) - Developer setup and testing
 
-| Acronym | Full Name | Description |
-|---------|-----------|-------------|
-| **IPI** | Installer-Provisioned Infrastructure | Cloud deployments with full automation |
-| **UPI** | User-Provisioned Infrastructure | Custom/restricted environments |
-| **ABI** | Agent-Based Installer | Disconnected on-premise deployments |
-| **IBI** | Image-Based Install | Fast SNO deployments from seed images |
-| **HCP** | Hosted Control Planes | Control plane as a service |
-| **ZTP** | Zero Touch Provisioning | GitOps-driven edge deployments |
-| **ACM** | Advanced Cluster Management | Multi-cluster management platform |
-| **MCE** | Multicluster Engine | Core cluster lifecycle operator |
-| **SNO** | Single Node OpenShift | All-in-one cluster on a single node |
+## Key Repositories
 
-> **See [Key Concepts & Glossary](00-concepts-glossary.md)** for detailed explanations of:
-> - Hub and Spoke architecture
-> - Early vs Late binding
-> - Declarative vs Imperative APIs
-> - Hyperscalers
-> - Release images, OS images, and digests
-> - Complete glossary of all acronyms
-
-### Operators vs Controllers
-
-In Kubernetes terminology:
-- **Operator**: A deployment/pod that runs one or more controllers, often packaged via OLM
-- **Controller**: A reconciliation loop that watches CRDs and drives state toward desired spec
-
-For example, [**assisted-service**](https://github.com/openshift/assisted-service) is an operator that contains multiple controllers:
-- [`InfraEnvReconciler`](https://github.com/openshift/assisted-service/blob/master/internal/controller/controllers/infraenv_controller.go) - watches InfraEnv CRs
-- [`AgentReconciler`](https://github.com/openshift/assisted-service/blob/master/internal/controller/controllers/agent_controller.go) - watches Agent CRs
-- [`ClusterDeploymentsReconciler`](https://github.com/openshift/assisted-service/blob/master/internal/controller/controllers/clusterdeployments_controller.go) - watches ClusterDeployment CRs
-- And several more...
-
-See [Operators & Controllers Reference](07-operators-controllers/overview.md) for details.
-
-### Operator Ecosystem
-
-Installation involves multiple cooperating operators:
-
-| Operator | Repository |
-|----------|------------|
-| MCE | [stolostron/backplane-operator](https://github.com/stolostron/backplane-operator) |
-| Hive | [openshift/hive](https://github.com/openshift/hive) |
+| Component | Repository |
+|-----------|------------|
+| OpenShift Installer | [openshift/installer](https://github.com/openshift/installer) |
 | Assisted Service | [openshift/assisted-service](https://github.com/openshift/assisted-service) |
-| Baremetal Operator | [metal3-io/baremetal-operator](https://github.com/metal3-io/baremetal-operator) |
+| Hive | [openshift/hive](https://github.com/openshift/hive) |
 | HyperShift | [openshift/hypershift](https://github.com/openshift/hypershift) |
-| SiteConfig | [stolostron/siteconfig](https://github.com/stolostron/siteconfig) |
+| Baremetal Operator | [metal3-io/baremetal-operator](https://github.com/metal3-io/baremetal-operator) |
 
-```mermaid
-graph LR
-    subgraph hub["Hub Cluster"]
-        MCE[MCE Operator]
-        HIVE[Hive]
-        ASSISTED[Assisted Service]
-        BMO[Baremetal Operator]
-        HYPERSHIFT[HyperShift]
-        SITECONFIG[SiteConfig Operator]
-    end
-    
-    subgraph spoke["Spoke Cluster"]
-        MACHINE_API[Machine API]
-        CVO[Cluster Version Operator]
-    end
-    
-    MCE --> HIVE
-    MCE --> ASSISTED
-    MCE --> BMO
-    MCE --> HYPERSHIFT
-    HIVE --> ASSISTED
-    ASSISTED --> BMO
-    
-    style MCE fill:#6d597a,stroke:#4a3f50,color:#fff
-    style HIVE fill:#6d597a,stroke:#4a3f50,color:#fff
-    style ASSISTED fill:#6d597a,stroke:#4a3f50,color:#fff
-    style BMO fill:#6d597a,stroke:#4a3f50,color:#fff
-    style HYPERSHIFT fill:#6d597a,stroke:#4a3f50,color:#fff
-    style SITECONFIG fill:#6d597a,stroke:#4a3f50,color:#fff
-    style MACHINE_API fill:#52796f,stroke:#354f52,color:#fff
-    style CVO fill:#52796f,stroke:#354f52,color:#fff
-    
-    style hub fill:#c4bfaa,stroke:#7a6a1a,stroke-width:2px,color:#2d2d2d
-    style spoke fill:#a8b0b8,stroke:#2d4a42,stroke-width:2px,color:#2d2d2d
-    
-    linkStyle default stroke:#2d3748,stroke-width:3px
-```
-
-## Getting Started
-
-1. **New to OpenShift?** Start with [Installation Methods Overview](01-installation-methods-overview.md)
-2. **Know your method?** Jump to the specific section
-3. **Developing operators?** See [Operators & Controllers Reference](07-operators-controllers/overview.md)
-4. **Working with CRDs?** Check the [CRD Reference](08-crd-reference/index.md)
-
-## Prerequisites for Understanding This Guide
-
-- Basic Kubernetes concepts (Pods, Deployments, CRDs, Operators)
-- Familiarity with YAML and Kubernetes manifests
-- Understanding of control plane vs worker node architecture
-
-## Contributing
-
-This documentation is maintained alongside the OpenShift installation components. See the source repositories linked in [Resources](10-resources.md) for contribution guidelines.
+See [Resources](10-resources.md) for a complete list.
 

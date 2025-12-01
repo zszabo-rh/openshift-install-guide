@@ -192,6 +192,8 @@ spec:
 
 ## YAML Examples
 
+### Local Examples
+
 See the [examples/](examples/) directory for complete YAML examples:
 
 - [ClusterDeployment](examples/clusterdeployment.yaml)
@@ -200,11 +202,24 @@ See the [examples/](examples/) directory for complete YAML examples:
 - [NMStateConfig](examples/nmstateconfig.yaml)
 - [BareMetalHost](examples/baremetalhost.yaml)
 
+### Additional Examples
+
+The assisted-service repository contains comprehensive CRD examples:
+
+- [Repository CRD Examples](https://github.com/openshift/assisted-service/tree/master/docs/hive-integration/crds) - Complete set including SNO, dual-stack, late binding variants
+
 > **Note:** For HostedCluster, NodePool, and ClusterInstance examples, see inline examples in:
 > - [HCP Overview](../05-hosted-control-planes/hcp-overview.md)
 > - [ZTP Documentation](../06-gitops-provisioning/ztp.md)
 
 ## Related Documentation
+
+### Detailed Documentation
+
+- [Hive Integration Guide](https://github.com/openshift/assisted-service/blob/master/docs/hive-integration/README.md) - Definitive CRD reference
+- [Kube-API Conditions](https://github.com/openshift/assisted-service/blob/master/docs/hive-integration/kube-api-conditions.md) - Status conditions reference
+
+### This Guide
 
 - [Operators & Controllers Reference](../07-operators-controllers/reference.md)
 - [Installation Methods Overview](../01-installation-methods-overview.md)
