@@ -214,7 +214,7 @@ See [Installation Methods Overview](01-installation-methods-overview.md) for det
 
 ## What is the Assisted Installer?
 
-The **Assisted Installer** ([assisted-service](https://github.com/openshift/assisted-service)) simplifies OpenShift installation by:
+The Assisted Installer simplifies OpenShift installation by:
 
 1. **Generating discovery ISOs** - Bootable images with an agent
 2. **Discovering hardware** - Agent reports CPU, RAM, disks, network

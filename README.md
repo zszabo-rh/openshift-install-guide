@@ -1,6 +1,6 @@
 # OpenShift Installation Guide
 
-A developer-focused guide to OpenShift cluster installation methods, with emphasis on the [Assisted Installer](https://github.com/openshift/assisted-service) and related components.
+A developer-focused guide to OpenShift cluster installation methods, with emphasis on the assisted-service and related components.
 
 ## What This Guide Covers
 
